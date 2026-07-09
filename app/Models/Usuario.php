@@ -16,6 +16,10 @@ class Usuario extends Model
     protected $hidden = [
         'contraseña',
     ];
+    public function rol()
+    {
+        return $this->belongsTo(Rol::class);
+    }
     public function movimientos()
     {
         return $this->hasMany(Movimiento::class);
