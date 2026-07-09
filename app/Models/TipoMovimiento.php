@@ -10,4 +10,8 @@ class TipoMovimiento extends Model
         'nombre',
         'naturaleza',
     ];
+    public function movimientos()
+    {
+        return $this->hasMany(Movimiento::class);
+    }
 }

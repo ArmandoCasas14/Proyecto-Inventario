@@ -18,4 +18,18 @@ class Producto extends Model
         'stock_minimo',
         'estado',
     ];
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class);
+    }
+
+    // Relación con Proveedor
+    public function proveedor()
+    {
+        return $this->belongsTo(Proveedor::class);
+    }
+    public function movimientos()
+    {
+        return $this->hasMany(Movimiento::class);
+    }
 }

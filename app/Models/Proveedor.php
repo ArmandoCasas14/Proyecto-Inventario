@@ -14,4 +14,8 @@ class Proveedor extends Model
         'direccion',
         'estado',
     ];
+    public function productos()
+    {
+        return $this->hasMany(Producto::class);
+    }
 }

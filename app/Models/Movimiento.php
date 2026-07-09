@@ -6,5 +6,28 @@ use Illuminate\Database\Eloquent\Model;
 
 class Movimiento extends Model
 {
-    //
+    protected $fillable = [
+        'producto_id',
+        'tipo_movimiento_id',
+        'usuario_id',
+        'cantidad',
+        'precio_unitario',
+        'observacion',
+    ];
+    public function producto()
+    {
+        return $this->belongsTo(Producto::class);
+    }
+
+    // Relación con el Tipo de Movimiento
+    public function tipoMovimiento()
+    {
+        return $this->belongsTo(TipoMovimiento::class);
+    }
+
+    // Relación con el Usuario que hizo el movimiento
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class);
+    }
 }

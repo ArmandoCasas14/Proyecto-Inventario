@@ -16,4 +16,8 @@ class Usuario extends Model
     protected $hidden = [
         'contraseña',
     ];
+    public function movimientos()
+    {
+        return $this->hasMany(Movimiento::class);
+    }
 }
