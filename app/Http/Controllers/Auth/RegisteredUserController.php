@@ -37,9 +37,11 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
-            'nombre' => $request->nombre,
+            'nombre' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'contraseña' => bcrypt($request->password), // Laravel lo encriptará
+            'rol_id' => 2, // Asigna un ID de rol por defecto válido en tu base de datos
+            'estado' => 1, // Activo por defecto
         ]);
 
         event(new Registered($user));
