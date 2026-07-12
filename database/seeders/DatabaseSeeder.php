@@ -20,10 +20,5 @@ class DatabaseSeeder extends Seeder
             CatalogoSeeder::class,
             DatabaseDummySeeder::class,
         ]);
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
     }
 }

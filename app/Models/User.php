@@ -10,18 +10,17 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $table = 'usuarios'; //
 
     protected $fillable = [
-        'nombre', //
+        'name', //
         'email', //
-        'contraseña', //
-        'rol_id', //
-        'estado', //
+        'password', //
+        'role_id', //
+        'status', //
     ];
 
     protected $hidden = [
-        'contraseña', //
+        'password', //
         'remember_token',
     ];
 
@@ -57,12 +56,12 @@ class User extends Authenticatable
      */
     public function setPasswordAttribute($value)
     {
-        $this->attributes['contraseña'] = $value;
+        $this->attributes['password'] = $value;
     }
 
     public function setNameAttribute($value)
     {
-        $this->attributes['nombre'] = $value;
+        $this->attributes['name'] = $value;
     }
 
 
@@ -73,13 +72,16 @@ class User extends Authenticatable
         ];
     }
 
-    public function rol()
+    // Relación con el Rol
+    public function role()
     {
-        return $this->belongsTo(Rol::class, 'rol_id');
+        return $this->belongsTo(Role::class);
     }
 
-    public function movimientos()
+    // Relación con los Movimientos
+    public function movements()
     {
-        return $this->hasMany(Movimiento::class, 'usuario_id');
+        return $this->hasMany(Movement::class);
     }
+    
 }

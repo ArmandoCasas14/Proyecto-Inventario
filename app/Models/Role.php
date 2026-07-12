@@ -6,15 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
-class Rol extends Model
+class Role extends Model
 {
     use HasFactory;
-    protected $table = 'roles';
+    
     protected $fillable = [
-        'nombre',
+        'name',
     ];
-    public function usuarios()
+    // Relación con Usuarios (ahora Users)
+    public function users()
     {
-        return $this->hasMany(Usuario::class);
+        return $this->hasMany(User::class);
     }
 }

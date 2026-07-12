@@ -2,11 +2,12 @@
 
 namespace Database\Seeders;
 
+use Database\Factories\MovementFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Rol;
-use App\Models\Categoria;
-use App\Models\TipoMovimiento;
+use App\Models\Role;
+use App\Models\Category;
+use App\Models\MovementType;
 
 class CatalogoSeeder extends Seeder
 {
@@ -17,13 +18,13 @@ class CatalogoSeeder extends Seeder
     {
         $roles = ['Administrador', 'Encargado de inventario'];
         foreach ($roles as $rol) {
-            Rol::create(['nombre' => $rol]);
+            Role::create(['name' => $rol]);
         }
 
         // 2. Categorías (Versátiles para la mayoría de inventarios)
         $categorias = ['Electrónica', 'Papelería', 'Limpieza', 'Alimentos', 'Herramientas', 'Otros'];
         foreach ($categorias as $cat) {
-            Categoria::create(['nombre' => $cat]);
+            Category::create(['name' => $cat]);
         }
 
         // 3. Tipos de Movimiento
@@ -36,9 +37,9 @@ class CatalogoSeeder extends Seeder
         ];
         
         foreach ($movimientos as $nombre => $naturaleza) {
-            TipoMovimiento::create([
-                'nombre' => $nombre,
-                'naturaleza' => $naturaleza
+            MovementType::create([
+                'name' => $nombre,
+                'type' => $naturaleza
             ]);
         }
     }

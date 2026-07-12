@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Proveedor;
+use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Proveedor>
+ * @extends Factory<Supplier>
  */
-class ProveedorFactory extends Factory
+class SupplierFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,12 +18,12 @@ class ProveedorFactory extends Factory
     public function definition(): array
     {
         return [
-            'razon_social' => $this->faker->company,
+            'legal_name' => $this->faker->company,
             'nit' => $this->faker->numerify('##########'),
-            'telefono' => $this->faker->phoneNumber,
+            'phone' => $this->faker->phoneNumber,
             'email' => $this->faker->companyEmail,
-            'direccion' => $this->faker->address,
-            'estado' => true,
+            'address' => $this->faker->address,
+            'status' => true,
         ];
     }
 }

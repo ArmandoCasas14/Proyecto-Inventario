@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
-class Categoria extends Model
+class MovementType extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'nombre',
-        'descripcion',
+        'name',
+        'type',
     ];
-    public function productos()
+    public function movements()
     {
-        return $this->hasMany(Producto::class);
+        return $this->hasMany(Movement::class);
     }
 }
