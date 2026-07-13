@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
 
@@ -27,7 +28,7 @@ class User extends Authenticatable
     /**
      * Mapea de forma interna la columna 'contraseña' como si fuera 'password' para Laravel.
      */
-    public function getAuthPassword()
+    /*public function getAuthPassword()
     {
         return $this->contraseña;
     }
@@ -35,11 +36,6 @@ class User extends Authenticatable
     {
         return $this->nombre;
     }
-
-    /**
-     * Truco definitivo: Cuando Laravel busque internamente $user->password, 
-     * devolverá el valor de la columna 'contraseña'.
-     */
     public function getPasswordAttribute()
     {
         return $this->contraseña;
@@ -49,11 +45,6 @@ class User extends Authenticatable
     {
         return $this->nombre;
     }
-
-    /**
-     * Cuando Laravel intente guardar o actualizar $user->password,
-     * lo guardará automáticamente en la columna 'contraseña'.
-     */
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = $value;
@@ -63,7 +54,7 @@ class User extends Authenticatable
     {
         $this->attributes['name'] = $value;
     }
-
+    */
 
     protected function casts(): array
     {
@@ -82,6 +73,15 @@ class User extends Authenticatable
     public function movements()
     {
         return $this->hasMany(Movement::class);
+    }
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims(): array
+    {
+        return [];
     }
     
 }
