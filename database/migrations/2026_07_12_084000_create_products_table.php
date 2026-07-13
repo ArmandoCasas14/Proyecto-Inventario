@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->foreignId('category_id')->constrained('categories');
-            $table->foreignId('supplier_id')->constrained('suppliers');
-            $table->decimal('purchase_price', 10, 2);
+            $table->foreignId('supplier_id')->nullable()->constrained('suppliers');// el producto puede ser hecho en la empresa 
+            $table->decimal('purchase_price', 10, 2)->nullable();//el producto puede ser hecho en la empresa
             $table->decimal('selling_price', 10, 2);
             $table->unsignedInteger('current_stock');
             $table->unsignedInteger('minimum_stock');
