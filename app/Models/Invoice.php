@@ -10,4 +10,13 @@ class Invoice extends Model
 {
     //
     use HasFactory;
+    protected $fillable = [
+        'customer_name', 
+        'total', 
+        'payment_type'
+    ];
+    public function items()
+    {
+        return $this->hasMany(InvoiceItem::class);
+    }
 }
