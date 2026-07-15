@@ -19,7 +19,7 @@ class SupplierFactory extends Factory
     {
         return [
             'legal_name' => $this->faker->company,
-            'nit' => $this->faker->numerify('##########'),
+            'nit' => $this->faker->unique()->numerify('##########'),
             'phone' => $this->faker->phoneNumber,
             'email' => $this->faker->companyEmail,
             'address' => $this->faker->address,

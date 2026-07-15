@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
             $table->string('legal_name');
-            $table->string('nit');
+            $table->string('nit',10)->unique();
             $table->string('phone');
             $table->string('email');
             $table->string('address');
