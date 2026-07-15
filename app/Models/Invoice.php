@@ -6,15 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
-class Rol extends Model
+class Invoice extends Model
 {
+    //
     use HasFactory;
-    protected $table = 'roles';
     protected $fillable = [
-        'nombre',
+        'customer_name', 
+        'total', 
+        'payment_type'
     ];
-    public function usuarios()
+    public function items()
     {
-        return $this->hasMany(Usuario::class);
+        return $this->hasMany(InvoiceItem::class);
     }
 }

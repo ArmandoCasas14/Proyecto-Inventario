@@ -5,30 +5,30 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
 
-    protected $table = 'usuarios'; //
 
     protected $fillable = [
-        'nombre',
-        'email', 
-        'contraseña', 
-        'rol_id', 
-        'estado', 
+        'name', //
+        'email', //
+        'password', //
+        'role_id', //
+        'status', //
     ];
 
     protected $hidden = [
-        'contraseña', //
+        'password', //
         'remember_token',
     ];
 
     /**
      * Mapea de forma interna la columna 'contraseña' como si fuera 'password' para Laravel.
      */
-    public function getAuthPassword()
+    /*public function getAuthPassword()
     {
         return $this->contraseña;
     }
@@ -36,11 +36,6 @@ class User extends Authenticatable
     {
         return $this->nombre;
     }
-
-    /**
-     * Truco definitivo: Cuando Laravel busque internamente $user->password, 
-     * devolverá el valor de la columna 'contraseña'.
-     */
     public function getPasswordAttribute()
     {
         return $this->contraseña;
@@ -50,21 +45,16 @@ class User extends Authenticatable
     {
         return $this->nombre;
     }
-
-    /**
-     * Cuando Laravel intente guardar o actualizar $user->password,
-     * lo guardará automáticamente en la columna 'contraseña'.
-     */
     public function setPasswordAttribute($value)
     {
-        $this->attributes['contraseña'] = $value;
+        $this->attributes['password'] = $value;
     }
 
     public function setNameAttribute($value)
     {
-        $this->attributes['nombre'] = $value;
+        $this->attributes['name'] = $value;
     }
-
+    */
 
     protected function casts(): array
     {
@@ -73,13 +63,25 @@ class User extends Authenticatable
         ];
     }
 
-    public function rol()
+    // Relación con el Rol
+    public function role()
     {
-        return $this->belongsTo(Rol::class, 'rol_id');
+        return $this->belongsTo(Role::class);
     }
 
-    public function movimientos()
+    // Relación con los Movimientos
+    public function movements()
     {
-        return $this->hasMany(Movimiento::class, 'usuario_id');
+        return $this->hasMany(Movement::class);
     }
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims(): array
+    {
+        return [];
+    }
+    
 }

@@ -4,23 +4,21 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Usuario;
-use App\Models\Proveedor;
-use App\Models\Producto;
-use App\Models\Movimiento;
+use App\Models\User;
+use App\Models\Supplier;
+use App\Models\Product;
+use App\Models\Movement;
 
 class DatabaseDummySeeder extends Seeder
 {
     public function run(): void
     {
         // 1. Primero proveedores y usuarios
-        Proveedor::factory()->count(10)->create();
-        Usuario::factory()->count(5)->create();
-
-        // 2. Luego productos (se relacionan con proveedores)
-        Producto::factory()->count(50)->create();
-
-        // 3. Finalmente los movimientos (se relacionan con todo lo anterior)
-        Movimiento::factory()->count(100)->create();
+        Supplier::factory()->count(10)->create();
+        User::factory()->count(5)->create();
+        // 2. Luego productos (se relacionan con proveedores y categorías)
+        Product::factory()->count(50)->create();
+        // 3. Finalmente los movimientos (se relacionan con productos, usuarios y tipos de movimiento)
+        Movement::factory()->count(100)->create();
     }
 }

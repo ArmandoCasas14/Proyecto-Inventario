@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
-class TipoMovimiento extends Model
+class Category extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'nombre',
-        'naturaleza',
+        'name',
+        'description',
     ];
-    public function movimientos()
+    public function products()
     {
-        return $this->hasMany(Movimiento::class);
+        return $this->hasMany(Product::class);
     }
 }

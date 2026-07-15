@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('customer_name'); // cliente_nombre
+            $table->decimal('total', 10, 2);
+            $table->enum('payment_type', ['efectivo', 'transferencia', 'tarjeta'])->default('efectivo');
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('invoices');
     }
 };
