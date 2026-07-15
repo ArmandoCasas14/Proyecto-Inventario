@@ -49,7 +49,13 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        $category->delete();
-        return redirect()->route('categories.index')->with('success', 'Categoría eliminada con éxito.');
+        // Validar si tiene productos activos
+    if ($category->products()->count() > 0) {
+        return redirect()->route('categories.index')
+            ->with('error', 'No se puede eliminar la categoría porque tiene productos asociados.');
+    }
+
+    $category->delete(); // Hará Soft Delete
+    return redirect()->route('categories.index')->with('success', 'Categoría eliminada con éxito.');
     }
 }

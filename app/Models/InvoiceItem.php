@@ -24,6 +24,6 @@ class InvoiceItem extends Model
     // Relación: Este detalle pertenece a un producto (para sacar el nombre, stock, etc.)
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class)->withTrashed();
     }
 }
