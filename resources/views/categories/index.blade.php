@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __('Control de Categorías') }}
             </h2>
-            <a href="{{ route('categorias.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm">
+            <a href="{{ route('categories.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm">
                 + Nueva Categoría
             </a>
         </div>
@@ -29,14 +29,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($categorias as $categoria)
+                        @forelse($categories as $category)
                             <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900">
-                                <td class="p-3">{{ $categoria->id }}</td>
-                                <td class="p-3 font-semibold text-gray-800 dark:text-gray-200">{{ $categoria->nombre }}</td>
-                                <td class="p-3">{{ $categoria->descripcion ?? 'Sin descripción' }}</td>
+                                <td class="p-3">{{ $category->id }}</td>
+                                <td class="p-3 font-semibold text-gray-800 dark:text-gray-200">{{ $category->name }}</td>
+                                <td class="p-3">{{ $category->description ?? 'Sin descripción' }}</td>
                                 <td class="p-3 flex justify-center space-x-2">
-                                    <a href="{{ route('categorias.edit', $categoria->id) }}" class="text-yellow-600 hover:text-yellow-900 text-sm font-medium">Editar</a>
-                                    <form action="{{ route('categorias.destroy', $categoria->id) }}" method="POST" onsubmit="return confirm('¿Seguro de eliminar esta categoría?')">
+                                    <a href="{{ route('categories.edit', $category->id) }}" class="text-yellow-600 hover:text-yellow-900 text-sm font-medium">Editar</a>
+                                    <form action="{{ route('categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('¿Seguro de eliminar esta categoría?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-900 text-sm font-medium">Eliminar</button>
