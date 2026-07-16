@@ -22,13 +22,14 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'role_id' => 'required|exists:roles,id',
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => bcrypt($validated['password']),
-            'role_id' => 2, // por defecto
+            'role_id' => $validated['role_id'],
         ]);
         if (!$user->id) {
             return response()->json(['error' => 'Usuario no se creó'], 500);
