@@ -55,7 +55,7 @@ class CategoryController extends Controller
             ->with('error', 'No se puede eliminar la categoría porque tiene productos asociados.');
     }
 
-    $category->delete(); // Hará Soft Delete
-    return redirect()->route('categories.index')->with('success', 'Categoría eliminada con éxito.');
+        $category->delete(); // Hará Soft Delete
+        return redirect()->route('categories.index')->with('success', 'Categoría eliminada con éxito.');
     }
 }

@@ -1,134 +1,126 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historial de Ventas - Cierre de Caja</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 min-h-screen py-8 px-4">
-
-    <div class="max-w-6xl mx-auto">
-        
-        @if (session('success'))
-            <div class="mb-6 bg-green-50 border-l-4 border-green-500 p-4 rounded-r-xl text-green-700 text-sm shadow-sm flex justify-between items-center">
-                <span>{{ session('success') }}</span>
-                <button onclick="this.parentElement.remove()" class="text-green-500 hover:text-green-700 font-bold">×</button>
-            </div>
-        @endif
-
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">Control de Caja e Historial</h1>
-                <p class="text-gray-500">Consulta de facturas emitidas, totales cobrados y auditoría de inventario</p>
-            </div>
-            <a href="{{ route('invoices.create') }}" 
-               class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition duration-150 gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </svg>
-                Registrar Nueva Venta
-            </a>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                <div class="text-xs font-bold text-gray-400 uppercase mb-1">Total Facturado en Página Actual</div>
-                <div class="text-2xl font-bold text-gray-900" id="total_page">
-                    ${{ number_format($invoices->sum('total'), 2) }}
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                <div class="text-xs font-bold text-gray-400 uppercase mb-1">Transacciones en Página</div>
-                <div class="text-2xl font-bold text-gray-900">
-                    {{ $invoices->count() }} ventas
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex justify-between items-center">
-                <div>
-                    <div class="text-xs font-bold text-gray-400 uppercase mb-1">Manejo de Existencias</div>
-                    <div class="text-lg font-bold text-indigo-600">Catálogo de Productos</div>
-                </div>
-                <a href="{{ route('products.index') }}" class="text-indigo-600 hover:text-indigo-800 font-semibold text-sm transition">
-                    Ver Stock →
-                </a>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <h2 class="font-bold text-gray-800">Listado de Facturas Recientes</h2>
-                <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                    Mostrando {{ $invoices->count() }} de {{ $invoices->total() }} registros
-                </span>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Factura #</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Fecha y Hora</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Cliente</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Método de Pago</th>
-                            <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Total</th>
-                            <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse($invoices as $invoice)
-                            <tr class="hover:bg-gray-50 transition duration-75">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-indigo-600">
-                                    #{{ str_pad($invoice->id, 5, '0', STR_PAD_LEFT) }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                    {{ $invoice->created_at->format('d/m/Y - h:i A') }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                    {{ $invoice->customer_name }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                        {{ $invoice->payment_type == 'Efectivo' ? 'bg-green-100 text-green-800' : '' }}
-                                        {{ $invoice->payment_type == 'Transferencia' ? 'bg-blue-100 text-blue-800' : '' }}
-                                        {{ $invoice->payment_type == 'Tarjeta' ? 'bg-purple-100 text-purple-800' : '' }}">
-                                        {{ $invoice->payment_type }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-bold text-gray-900">
-                                    ${{ number_format($invoice->total, 2) }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                    <a href="{{ route('invoices.show', $invoice->id) }}" 
-                                       class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition">
-                                        Ver Detalle
-                                    </a>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="px-6 py-12 text-center text-gray-400 text-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                    No se han registrado facturas ni movimientos de caja el día de hoy.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            @if($invoices->hasPages())
-                <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                    {{ $invoices->links() }}
+<x-app-layout>
+    <div class="py-10">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            
+            @if(session('success'))
+                <div class="mb-6 p-4 bg-emerald-50 dark:bg-emerald-950/30 border-l-4 border-emerald-500 rounded-r-xl flex items-center justify-between shadow-xs">
+                    <div class="flex items-center gap-3">
+                        <span class="text-emerald-500 text-lg">✅</span>
+                        <span class="text-sm font-semibold text-emerald-800 dark:text-emerald-300">{{ session('success') }}</span>
+                    </div>
+                    <button onclick="this.parentElement.remove()" class="text-emerald-400 hover:text-emerald-600 font-bold">×</button>
                 </div>
             @endif
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-150 dark:border-gray-700 shadow-xs flex items-center gap-5">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl font-bold">
+                        💰
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Flujo de Caja Total</span>
+                        <h4 class="text-2xl font-black text-gray-900 dark:text-white mt-0.5">${{ number_format($invoices->sum('total'), 2) }}</h4>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-150 dark:border-gray-700 shadow-xs flex items-center gap-5">
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl font-bold">
+                        🧾
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Facturas Emitidas</span>
+                        <h4 class="text-2xl font-black text-gray-900 dark:text-white mt-0.5">{{ $invoices->count() }}</h4>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-150 dark:border-gray-700 shadow-xs flex items-center gap-5">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl font-bold">
+                        📈
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Ticket Promedio</span>
+                        <h4 class="text-2xl font-black text-gray-900 dark:text-white mt-0.5">
+                            ${{ number_format($invoices->count() > 0 ? $invoices->avg('total') : 0, 2) }}
+                        </h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-md overflow-hidden">
+                
+                <div class="bg-indigo-600 dark:bg-indigo-900 text-white px-8 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-extrabold tracking-tight">Historial de Ventas</h1>
+                        <p class="text-indigo-200 text-xs mt-1.5">Control de caja diaria, listado y arqueo de facturaciones realizadas.</p>
+                    </div>
+                    <div>
+                        <a href="{{ route('invoices.create') }}"
+                           class="inline-flex items-center justify-center bg-indigo-500 hover:bg-indigo-400 text-white font-bold py-2.5 px-5 rounded-xl border border-indigo-400/50 shadow-sm transition duration-150 text-sm">
+                            + Registrar Nueva Venta
+                        </a>
+                    </div>
+                </div>
+
+                <div class="p-6">
+                    <div class="overflow-x-auto rounded-xl border border-gray-150 dark:border-gray-750">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 dark:bg-gray-900/40 border-b border-gray-150 dark:border-gray-700 text-gray-400 dark:text-gray-500 font-bold text-[11px] uppercase tracking-wider">
+                                    <th class="px-6 py-4">ID de Venta</th>
+                                    <th class="px-6 py-4">Fecha y Hora</th>
+                                    <th class="px-6 py-4">Cliente</th>
+                                    <th class="px-6 py-4 text-center">Método de Pago</th>
+                                    <th class="px-6 py-4 text-right">Total Cobrado</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                                @forelse($invoices as $invoice)
+                                    <tr class="hover:bg-indigo-50/10 dark:hover:bg-indigo-950/5 transition duration-150">
+                                        <td class="px-6 py-4 text-sm font-mono text-gray-400 dark:text-gray-500">
+                                            #FAC-{{ str_pad($invoice->id, 5, '0', STR_PAD_LEFT) }}
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                            {{ $invoice->created_at->format('d/m/Y - h:i A') }}
+                                        </td>
+                                        <td class="px-6 py-4 text-sm font-bold text-gray-900 dark:text-white">
+                                            {{ $invoice->customer_name }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center justify-center">
+                                                @if($invoice->payment_type === 'Efectivo')
+                                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/40">
+                                                        💵 {{ $invoice->payment_type }}
+                                                    </span>
+                                                @elseif($invoice->payment_type === 'Tarjeta')
+                                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border border-blue-100 dark:border-blue-900/40">
+                                                        💳 {{ $invoice->payment_type }}
+                                                    </span>
+                                                @else
+                                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-400 border border-purple-100 dark:border-purple-900/40">
+                                                        📱 {{ $invoice->payment_type }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-right font-black text-gray-900 dark:text-white">
+                                            ${{ number_format($invoice->total, 2) }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="px-6 py-16 text-center text-gray-400 dark:text-gray-500">
+                                            <span class="text-4xl block mb-2">🧾</span>
+                                            <p class="font-bold">No se han registrado facturas todavía.</p>
+                                            <p class="text-xs mt-1">Crea una venta desde el panel del sistema.</p>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
         </div>
-
     </div>
-
-</body>
-</html>
+</x-app-layout>
