@@ -61,4 +61,58 @@ class AuthController extends Controller
         auth('api')->logout();
         return response()->json(['message' => 'Sesión cerrada correctamente']);
     }
+    public function index()
+    {
+        // Solo el administrador debe poder ver la lista completa
+        if (auth('api')->user()->role->name !== 'Administrador') {
+            return response()->json(['error' => 'No autorizado'], 403);
+        }
+
+        // Retornamos los usuarios con su rol cargado
+        return response()->json(User::with('role')->get());
+    }
+    public function show($id)
+    {
+        // Solo permitimos ver si eres tú mismo o si eres administrador
+        $user = User::findOrFail($id);
+        
+        if (auth('api')->user()->id !== $user->id && auth('api')->user()->role->name !== 'Administrador') {
+            return response()->json(['error' => 'No tienes permiso'], 403);
+        }
+
+        return response()->json($user);
+    }
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $authenticatedUser = auth('api')->user();
+
+        // 1. Verificación de permisos
+        if ($authenticatedUser->id !== $user->id && $authenticatedUser->role->name !== 'Administrador') {
+            return response()->json(['error' => 'No tienes permiso'], 403);
+        }
+
+        // 2. Definir qué campos puede editar
+        $rules = [
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'sometimes|string|min:8',
+        ];
+
+        // Solo el administrador puede modificar el rol
+        if ($authenticatedUser->role->name === 'Administrador') {
+            $rules['role_id'] = 'sometimes|exists:roles,id';
+        }
+
+        $validated = $request->validate($rules);
+
+        // 3. Procesar contraseña si existe
+        if (isset($validated['password'])) {
+            $validated['password'] = bcrypt($validated['password']);
+        }
+
+        $user->update($validated);
+
+        return response()->json(['message' => 'Usuario actualizado correctamente', 'user' => $user]);
+    }
 }

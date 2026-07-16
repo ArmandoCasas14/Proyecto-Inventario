@@ -26,6 +26,11 @@ Route::middleware('auth:api')->group(function () {
         Route::get('movement', [MovementController::class, 'index']);
         Route::get('movement/{movement}', [MovementController::class, 'show']);
         Route::apiResource('role', RoleController::class);
+        Route::get('users', [AuthController::class, 'index']);
+        Route::get('invoices', [InvoiceController::class, 'index']);
+        Route::get('invoices/{invoice}', [InvoiceController::class, 'show']);
+        Route::get('invoice-items', [InvoiceItemController::class, 'index']);
+        Route::get('invoice-items/{item}', [InvoiceItemController::class, 'show']);
     });
     Route::middleware('role:Encargado de inventario')->group(function () {
         Route::apiResource('movement', MovementController::class);
@@ -36,6 +41,8 @@ Route::middleware('auth:api')->group(function () {
         Route::apiResource('product', ProductController::class);
         Route::get('supplier', [SupplierController::class, 'index']);
         Route::get('supplier/{supplier}', [SupplierController::class, 'show']);
+        Route::put('users/{id}', [AuthController::class, 'update']);
+        Route::get('users/{id}', [AuthController::class, 'show']);
     });
 });
 
