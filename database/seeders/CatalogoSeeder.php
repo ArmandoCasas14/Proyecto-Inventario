@@ -31,9 +31,11 @@ class CatalogoSeeder extends Seeder
         $movimientos = [
             'Compra' => 'suma',
             'Venta' => 'resta',
-            'Traslado' => 'neutro',
             'Desecho' => 'resta',
-            'Devolución' => 'suma'
+            'Devolución' => 'suma',
+            // Ajustes de inventario para corregir discrepancias físicas
+            'Ajuste de entrada' => 'suma', // Cuando el stock físico es MAYOR al del sistema
+            'Ajuste de salida' => 'resta', // Cuando el stock físico es MENOR al del sistema
         ];
         
         foreach ($movimientos as $nombre => $naturaleza) {
