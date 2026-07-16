@@ -14,7 +14,7 @@ class ProductController extends Controller
         // Usamos eager loading (with) para cargar las relaciones de un solo golpe de consulta SQL
         $categories = Category::all();
         $suppliers = Supplier::where('status', 1)->get(); // Solo proveedores activos    
-        $products = Product::with(['category', 'supplier'])->get();
+        $products = Product::with(['category', 'supplier'])->paginate(10);
         return view('products.index', compact('products', 'categories', 'suppliers'));
     }
 

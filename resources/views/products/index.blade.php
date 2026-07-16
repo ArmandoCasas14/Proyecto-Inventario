@@ -5,7 +5,7 @@
                 {{ __('Productos') }}
             </h2>
             <a href="{{ route('products.create') }}"
-               class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-gray-300 dark:border-gray-600 rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-800 transition ease-in-out duration-150">
+               class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-800 transition ease-in-out duration-150">
                 + {{ __('Nuevo Producto') }}
             </a>
         </div>
@@ -90,7 +90,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" title="{{ __('Eliminar') }}"
-                                                        class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300 transition ease-in-out duration-150 shadow-sm">
+                                                        class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-red-100 text-red-700 hover:bg-red-500 hover:text-white dark:bg-red-900/40 dark:text-red-300 dark:hover:bg-red-600 dark:hover:text-white transition ease-in-out duration-150 shadow-sm">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                     </svg>
@@ -109,6 +109,10 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+
+            <div class="mt-6">
+                {{ $products->links() }}
             </div>
         </div>
     </div>
