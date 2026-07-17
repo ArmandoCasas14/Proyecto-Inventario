@@ -9,13 +9,21 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Usamos eager loading (with) para cargar las relaciones de un solo golpe de consulta SQL
-        $categories = Category::all();
-        $suppliers = Supplier::where('status', 1)->get(); // Solo proveedores activos    
-        $products = Product::with(['category', 'supplier'])->paginate(10);
-        return view('products.index', compact('products', 'categories', 'suppliers'));
+        // 1. Aplicamos los Scopes leyendo los datos de la URL ($request)
+        $products = Product::search($request->get('search'))
+                           ->ofCategory($request->get('category_id'))
+                           ->stockStatus($request->get('stock'))
+                           ->where('status', 1) // solo activos
+                           ->orderBy('name', 'asc')
+                           ->paginate(15)
+                           ->withQueryString(); // ⚠️ ¡CRÍTICO! Mantiene los filtros activos al cambiar de página
+
+        // 2. Traemos las categorías para armar el menú de filtros laterales
+        $categories = Category::orderBy('name', 'asc')->get();
+
+        return view('products.index', compact('products', 'categories'));
     }
 
     public function create()

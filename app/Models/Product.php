@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class Product extends Model
 {
@@ -37,5 +38,43 @@ class Product extends Model
     public function movements()
     {
         return $this->hasMany(Movement::class);
+    }
+
+    public function scopeSearch(Builder $query, ?string $term): Builder
+    {
+        if (!$term) return $query;
+
+        return $query->where(function ($q) use ($term) {
+            $q->where('name', 'like', "%{$term}%")
+              ->orWhere('code', 'like', "%{$term}%"); // Asumiendo que usas 'code'
+        });
+    }
+
+    /**
+     * Filtro por Categoría
+     */
+    public function scopeOfCategory(Builder $query, ?int $categoryId): Builder
+    {
+        if (!$categoryId) return $query;
+
+        return $query->where('category_id', $categoryId);
+    }
+
+    /**
+     * Filtro por Estado de Stock (Disponibles vs Agotados)
+     */
+    public function scopeStockStatus(Builder $query, ?string $status): Builder
+    {
+        if (!$status) return $query;
+
+        if ($status === 'disponible') {
+            return $query->where('current_stock', '>', 0);
+        }
+
+        if ($status === 'agotado') {
+            return $query->where('current_stock', '<=', 0);
+        }
+
+        return $query;
     }
 }
