@@ -42,7 +42,7 @@ class ProductController extends Controller
 
         Product::create(array_merge($request->all(), ['status' => 1]));
 
-        return redirect()->route('products.index')->with('success', 'Producto registrado exitosamente.');
+        return redirect()->route('productos.index')->with('success', 'Producto registrado exitosamente.');
     }
 
     public function edit(Product $product)
@@ -69,12 +69,12 @@ class ProductController extends Controller
 
         $product->update($request->all());
 
-        return redirect()->route('products.index')->with('success', 'Producto actualizado con éxito.');
+        return redirect()->route('productos.index')->with('success', 'Producto actualizado con éxito.');
     }
 
     public function destroy(Product $product)
     {
         $product->delete();
-        return redirect()->route('products.index')->with('success', 'Producto eliminado de los registros.');
+        return redirect()->route('productos.index')->with('success', 'Producto eliminado de los registros.');
     }
 }

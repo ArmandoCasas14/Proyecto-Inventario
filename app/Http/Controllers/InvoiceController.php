@@ -109,7 +109,7 @@ class InvoiceController extends Controller
                 return $invoice;
             });
 
-            return redirect()->route('invoices.show', $invoice->id)
+            return redirect()->route('facturas.show', $invoice->id)
                              ->with('success', 'Venta registrada e inventario actualizado exitosamente.');
 
         } catch (\Exception $e) {

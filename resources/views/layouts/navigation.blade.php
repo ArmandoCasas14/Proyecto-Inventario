@@ -14,23 +14,23 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    <x-nav-link class="ms-2" :href="route('invoices.create')" :active="request()->routeIs('invoices.create')">
+                    <x-nav-link class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400    ms-2" :href="route('facturas.create')" :active="request()->routeIs('facturas.create')">
                         {{ __('Registrar Venta') }}
                     </x-nav-link>
 
-                    <x-nav-link class="ms-2" :href="route('invoices.index')" :active="request()->routeIs('invoices.index')">
+                    <x-nav-link class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400    ms-2" :href="route('facturas.index')" :active="request()->routeIs('facturas.index')">
                         {{ __('Historial Ventas') }}
                     </x-nav-link>
 
-                    <x-nav-link class="ms-2" :href="route('products.index')" :active="request()->routeIs('products.*')">
+                    <x-nav-link class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400    ms-2" :href="route('productos.index')" :active="request()->routeIs('productos.*')">
                         {{ __('Productos') }}
                     </x-nav-link>
 
-                    <x-nav-link class="ms-2" :href="route('categories.index')" :active="request()->routeIs('categories.*')">
+                    <x-nav-link class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400    ms-2" :href="route('categorias.index')" :active="request()->routeIs('categorias.*')">
                         {{ __('Categorías') }}
                     </x-nav-link>
 
-                    <x-nav-link class="ms-2" :href="route('suppliers.index')" :active="request()->routeIs('suppliers.*')">
+                    <x-nav-link class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400    ms-2" :href="route('proveedores.index')" :active="request()->routeIs('proveedores.*')">
                         {{ __('Proveedores') }}
                     </x-nav-link>
                 </div>
@@ -83,19 +83,19 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __(' Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('invoices.create')" :active="request()->routeIs('invoices.create')">
+            <x-responsive-nav-link :href="route('facturas.create')" :active="request()->routeIs('facturas.create')">
                 {{ __('Registrar Venta') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('invoices.index')" :active="request()->routeIs('invoices.index')">
+            <x-responsive-nav-link :href="route('facturas.index')" :active="request()->routeIs('facturas.index')">
                 {{ __('Historial Ventas') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
+            <x-responsive-nav-link :href="route('productos.index')" :active="request()->routeIs('productos.*')">
                 {{ __('Productos') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
+            <x-responsive-nav-link :href="route('categorias.index')" :active="request()->routeIs('categorias.*')">
                 {{ __('Categorías') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.*')">
+            <x-responsive-nav-link :href="route('proveedores.index')" :active="request()->routeIs('proveedores.*')">
                 {{ __('Proveedores') }}
             </x-responsive-nav-link>
         </div>

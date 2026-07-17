@@ -8,7 +8,7 @@
     <div class="py-8">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 p-6 shadow-sm sm:rounded-lg">
-                <form method="POST" action="{{ route('categories.store') }}" class="space-y-6">
+                <form method="POST" action="{{ route('categorias.store') }}" class="space-y-6">
                     @csrf
 
                     <div>
@@ -26,7 +26,7 @@
                     </div>
 
                     <div class="flex items-center justify-end gap-3">
-                        <a href="{{ route('categories.index') }}"
+                        <a href="{{ route('categorias.index') }}"
                            class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-600 transition ease-in-out duration-150">
                             {{ __('Cancelar') }}
                         </a>

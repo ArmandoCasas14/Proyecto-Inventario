@@ -27,7 +27,7 @@ class CategoryController extends Controller
 
         Category::create($request->all());
 
-        return redirect()->route('categories.index')->with('success', 'Categoría creada con éxito.');
+        return redirect()->route('categorias.index')->with('success', 'Categoría creada con éxito.');
     }
 
     public function edit(Category $category)
@@ -44,18 +44,18 @@ class CategoryController extends Controller
 
         $category->update($request->all());
 
-        return redirect()->route('categories.index')->with('success', 'Categoría actualizada con éxito.');
+        return redirect()->route('categorias.index')->with('success', 'Categoría actualizada con éxito.');
     }
 
     public function destroy(Category $category)
     {
         // Validar si tiene productos activos
     if ($category->products()->count() > 0) {
-        return redirect()->route('categories.index')
+        return redirect()->route('categorias.index')
             ->with('error', 'No se puede eliminar la categoría porque tiene productos asociados.');
     }
 
         $category->delete(); // Hará Soft Delete
-        return redirect()->route('categories.index')->with('success', 'Categoría eliminada con éxito.');
+        return redirect()->route('categorias.index')->with('success', 'Categoría eliminada con éxito.');
     }
 }

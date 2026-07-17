@@ -9,7 +9,7 @@
                 </div>
             </template>
 
-            <form action="{{ route('invoices.store') }}" method="POST">
+            <form action="{{ route('facturas.store') }}" method="POST">
                 @csrf
                 
                 <template x-for="(item, index) in cart" :key="item.product_id">

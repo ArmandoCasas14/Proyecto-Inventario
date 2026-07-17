@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __('Productos') }}
             </h2>
-            <a href="{{ route('products.create') }}"
+            <a href="{{ route('productos.create') }}"
                class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-800 transition ease-in-out duration-150">
                 + {{ __('Nuevo Producto') }}
             </a>
@@ -78,14 +78,14 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
                                         <div class="flex items-center justify-end gap-2">
-                                            <a href="{{ route('products.edit', $product) }}"
+                                            <a href="{{ route('productos.edit', $product) }}"
                                                title="{{ __('Editar') }}"
                                                class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-500 hover:text-white dark:bg-amber-900/40 dark:text-amber-300 dark:hover:bg-amber-600 dark:hover:text-white transition ease-in-out duration-150 shadow-sm">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                 </svg>
                                             </a>
-                                            <form action="{{ route('products.destroy', $product) }}" method="POST"
+                                            <form action="{{ route('productos.destroy', $product) }}" method="POST"
                                                   onsubmit="return confirm('¿Seguro que deseas eliminar este producto?');">
                                                 @csrf
                                                 @method('DELETE')

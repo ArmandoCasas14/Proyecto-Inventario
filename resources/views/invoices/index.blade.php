@@ -54,7 +54,7 @@
                         <p class="text-indigo-200 text-xs mt-1.5">Control de caja diaria, listado y arqueo de facturaciones realizadas.</p>
                     </div>
                     <div>
-                        <a href="{{ route('invoices.create') }}"
+                        <a href="{{ route('facturas.create') }}"
                            class="inline-flex items-center justify-center bg-indigo-500 hover:bg-indigo-400 text-white font-bold py-2.5 px-5 rounded-xl border border-indigo-400/50 shadow-sm transition duration-150 text-sm">
                             + Registrar Nueva Venta
                         </a>

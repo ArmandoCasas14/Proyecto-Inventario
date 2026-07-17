@@ -19,10 +19,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::resource('categories', CategoryController::class);
-    Route::resource('suppliers', SupplierController::class);
-    Route::resource('products', ProductController::class);
-    Route::resource('invoices', InvoiceController::class);
+    Route::resource('categories', CategoryController::class)->names('categorias');
+    Route::resource('suppliers', SupplierController::class)->names('proveedores');
+    Route::resource('products', ProductController::class)->names('productos');
+    Route::resource('invoices', InvoiceController::class)->names('facturas');
 });
 
 require __DIR__.'/auth.php';

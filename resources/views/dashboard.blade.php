@@ -6,7 +6,7 @@
                 <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Dashboard General</h1>
                 <p class="text-sm text-gray-500 mt-1">Resumen de operaciones, estadísticas de ventas y alertas de inventario en tiempo real</p>
             </div>
-            <a href="{{ route('invoices.create') }}" 
+            <a href="{{ route('facturas.create') }}" 
                class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg transition duration-150 gap-2 text-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
@@ -69,7 +69,7 @@
                 </div>
                 <div class="mt-4 flex items-center justify-between">
                     <span class="text-xs text-gray-400">En 8 categorías</span>
-                    <a href="{{ route('products.index') }}" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition">Ver todos →</a>
+                    <a href="{{ route('productos.index') }}" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition">Ver todos →</a>
                 </div>
             </div>
 
@@ -108,7 +108,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-400">15</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
-                                    <a href="{{ route('products.edit', 1) }}" class="text-indigo-600 hover:text-indigo-900 font-bold transition">Surtir</a>
+                                    <a href="{{ route('productos.edit', 1) }}" class="text-indigo-600 hover:text-indigo-900 font-bold transition">Surtir</a>
                                 </td>
                             </tr>
                             <tr class="hover:bg-gray-50/40 transition">
@@ -121,7 +121,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-400">10</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
-                                    <a href="{{ route('products.edit', 2) }}" class="text-indigo-600 hover:text-indigo-900 font-bold transition">Surtir</a>
+                                    <a href="{{ route('productos.edit', 2) }}" class="text-indigo-600 hover:text-indigo-900 font-bold transition">Surtir</a>
                                 </td>
                             </tr>
                             <tr class="hover:bg-gray-50/40 transition">
@@ -134,7 +134,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-400">5</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
-                                    <a href="{{ route('products.edit', 3) }}" class="text-indigo-600 hover:text-indigo-900 font-bold transition">Surtir</a>
+                                    <a href="{{ route('productos.edit', 3) }}" class="text-indigo-600 hover:text-indigo-900 font-bold transition">Surtir</a>
                                 </td>
                             </tr>
                         </tbody>

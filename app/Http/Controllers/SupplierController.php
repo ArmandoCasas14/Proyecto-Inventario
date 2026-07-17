@@ -32,7 +32,7 @@ class SupplierController extends Controller
         // Por defecto creamos el proveedor con estado activo (1)
         Supplier::create(array_merge($request->all(), ['status' => 1]));
 
-        return redirect()->route('suppliers.index')->with('success', 'Proveedor registrado con éxito.');
+        return redirect()->route('proveedores.index')->with('success', 'Proveedor registrado con éxito.');
     }
 
     public function edit(Supplier $supplier)
@@ -53,7 +53,7 @@ class SupplierController extends Controller
 
         $supplier->update($request->all());
 
-        return redirect()->route('suppliers.index')->with('success', 'Proveedor actualizado con éxito.');
+        return redirect()->route('proveedores.index')->with('success', 'Proveedor actualizado con éxito.');
     }
 
     public function destroy(Supplier $supplier)
@@ -62,10 +62,11 @@ class SupplierController extends Controller
         // cambiamos su estado a 0 (Inactivo) en vez de eliminarlo de raíz.
         if ($supplier->products()->count() > 0) {
             $supplier->update(['status' => 0]);
-            return redirect()->route('suppliers.index')->with('success', 'El proveedor tiene productos asociados. Se ha cambiado su estado a Inactivo.');
+            return redirect()->route('proveedores.index')->with('success', 'El proveedor tiene productos asociados. Se ha cambiado su estado a Inactivo.');
         }
 
         $supplier->delete();
-        return redirect()->route('suppliers.index')->with('success', 'Proveedor eliminado correctamente.');
+        return redirect()->route('proveedores
+        .index')->with('success', 'Proveedor eliminado correctamente.');
     }
 }
