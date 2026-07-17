@@ -63,18 +63,25 @@ class Product extends Model
     /**
      * Filtro por Estado de Stock (Disponibles vs Agotados)
      */
-    public function scopeStockStatus(Builder $query, ?string $status): Builder
+    public function scopeStockStatus(Builder $query, ?string $stockstatus): Builder
     {
-        if (!$status) return $query;
+        if (!$stockstatus) return $query;
 
-        if ($status === 'disponible') {
+        if ($stockstatus === 'disponible') {
             return $query->where('current_stock', '>', 0);
         }
 
-        if ($status === 'agotado') {
+        if ($stockstatus === 'agotado') {
             return $query->where('current_stock', '<=', 0);
         }
 
         return $query;
+    }
+
+    public function scopeOfStatus(Builder $query, ?string $status): Builder
+    {
+        if ($status === null || $status === '') return $query;
+
+        return $query->where('status', (int)$status);
     }
 }

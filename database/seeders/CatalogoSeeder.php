@@ -24,7 +24,10 @@ class CatalogoSeeder extends Seeder
         // 2. Categorías (Versátiles para la mayoría de inventarios)
         $categorias = ['Electrónica', 'Papelería', 'Limpieza', 'Alimentos', 'Herramientas', 'Otros'];
         foreach ($categorias as $cat) {
-            Category::create(['name' => $cat]);
+            Category::create([
+                'name' => $cat,
+                'description' => "Categoría de productos: $cat",
+            ]);
         }
 
         // 3. Tipos de Movimiento

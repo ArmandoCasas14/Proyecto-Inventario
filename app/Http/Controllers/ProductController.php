@@ -15,15 +15,40 @@ class ProductController extends Controller
         $products = Product::search($request->get('search'))
                            ->ofCategory($request->get('category_id'))
                            ->stockStatus($request->get('stock'))
-                           ->where('status', 1) // solo activos
+                           ->ofStatus($request->input('status'))
                            ->orderBy('name', 'asc')
                            ->paginate(10)
-                           ->withQueryString(); // ⚠️ ¡CRÍTICO! Mantiene los filtros activos al cambiar de página
+                           ->withQueryString();
 
         // 2. Traemos las categorías para armar el menú de filtros laterales
         $categories = Category::orderBy('name', 'asc')->get();
 
         return view('products.index', compact('products', 'categories'));
+    }
+
+     public function toggleStatus(Product $product)
+    {
+        // 1. Si el producto está ACTIVO e intentan INACTIVARLO (pasar a 0)
+        if ($product->status == 1) {
+            
+            // Verificamos que este vacio el stock actual del producto
+            if ($product->current_stock > 0) {
+                return redirect()->route('productos.index')->with(
+                    'error', 
+                    "No se puede inactivar el producto '{$product->name}' porque tiene stock disponible en el sistema."
+                );
+            }
+        }
+
+        // 2. Si pasa la validación (o si se está activando), conmutamos el estado
+        $product->status = $product->status ? 0 : 1;
+        $product->save();
+
+        $mensaje = $product->status 
+            ? 'El producto ha sido activado correctamente.' 
+            : 'El producto ha sido desactivado correctamente.';
+
+        return redirect()->route('productos.index')->with('success', $mensaje);
     }
 
     public function create()
@@ -45,7 +70,6 @@ class ProductController extends Controller
             'selling_price'  => 'required|numeric|min:0',
             'current_stock'  => 'required|integer|min:0',
             'minimum_stock'  => 'required|integer|min:0',
-            'status'         => 'required|boolean', // 1 activo, 0 inactivo
         ]);
 
         Product::create(array_merge($request->all(), ['status' => 1]));

@@ -26,6 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('invoices', InvoiceController::class)->names('facturas');
     Route::resource('movements', MovementController::class)->names('movimientos')->only(['index', 'create', 'store']);
     Route::patch('suppliers/{supplier}/toggle', [SupplierController::class, 'toggleStatus'])->name('proveedores.toggleStatus');
+    Route::patch('categories/{category}/toggle', [CategoryController::class, 'toggleStatus'])->name('categorias.toggleStatus');
+    Route::patch('products/{product}/toggle', [ProductController::class, 'toggleStatus'])->name('productos.toggleStatus');
 });
 
 require __DIR__.'/auth.php';

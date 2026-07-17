@@ -18,6 +18,32 @@ class CategoryController extends Controller
         return view('categories.index', compact('categories'));
     }
 
+    public function toggleStatus(Category $category)
+    {
+        // 1. Si la categoría está ACTIVA e intentan INACTIVARLA (pasar a 0)
+        if ($category->status == 1) {
+            
+            // Verificamos si tiene productos asociados
+            if ($category->products()->exists()) {
+                return redirect()->route('categorias.index')->with(
+                    'error', 
+                    "No se puede inactivar la categoría '{$category->name}' porque tiene productos vinculados en el sistema."
+                );
+            }
+        }
+
+        // 2. Si pasa la validación (o si se está activando), conmutamos el estado
+        $category->status = $category->status ? 0 : 1;
+        $category->save();
+
+        $mensaje = $category->status 
+            ? 'La categoría ha sido activada correctamente.' 
+            : 'La categoría ha sido desactivada correctamente.';
+
+        return redirect()->route('categorias.index')->with('success', $mensaje);
+    }
+
+
     public function create()
     {
         return view('categories.create');
