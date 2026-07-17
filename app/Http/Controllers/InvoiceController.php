@@ -12,10 +12,20 @@ use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Listado de facturas para el cierre de caja o auditoría
-        $invoices = Invoice::orderBy('created_at', 'desc')->paginate(15);
+        // 1. Iniciamos la consulta base ordenando por las más recientes
+       $invoices = Invoice::orderBy('created_at', 'desc');
+
+        // 2. Aplicamos los scopes condicionales usando los inputs del formulario
+        $invoices->byInvoiceNumber($request->input('invoice_number'))
+                 ->byCustomer($request->input('customer'))
+                 ->byDate($request->input('date'));
+
+        // 3. Paginamos los resultados (ej: 10 por página) manteniendo los filtros en la URL
+        $invoices = $invoices->paginate(10);
+
+        // 4. Retornamos la vista con las facturas ya filtradas
         return view('invoices.index', compact('invoices'));
     }
 

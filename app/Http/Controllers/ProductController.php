@@ -17,7 +17,7 @@ class ProductController extends Controller
                            ->stockStatus($request->get('stock'))
                            ->where('status', 1) // solo activos
                            ->orderBy('name', 'asc')
-                           ->paginate(15)
+                           ->paginate(10)
                            ->withQueryString(); // ⚠️ ¡CRÍTICO! Mantiene los filtros activos al cambiar de página
 
         // 2. Traemos las categorías para armar el menú de filtros laterales
