@@ -23,7 +23,7 @@ class InvoiceController extends Controller
                  ->byDate($request->input('date'));
 
         // 3. Paginamos los resultados (ej: 10 por página) manteniendo los filtros en la URL
-        $invoices = $invoices->paginate(10);
+        $invoices = $invoices->paginate(10)->withQueryString();
 
         // 4. Retornamos la vista con las facturas ya filtradas
         return view('invoices.index', compact('invoices'));

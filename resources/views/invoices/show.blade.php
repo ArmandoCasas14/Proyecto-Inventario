@@ -29,7 +29,7 @@
                 <!-- Encabezado del Recibo -->
                 <div class="flex justify-between items-start border-b pb-6 mb-6 dark:border-gray-700">
                     <div>
-                        <h1 class="text-3xl font-black text-indigo-600 dark:text-indigo-400">SISTEMA INVENTARIO</h1>
+                        <h1 class="text-3xl font-black text-indigo-600 dark:text-indigo-400">STOCK MASTER</h1>
                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Comprobante electrónico de venta interna</p>
                     </div>
                     <div class="text-right">

@@ -10,14 +10,22 @@ use Illuminate\Support\Facades\DB;
 
 class MovementController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Cargamos relaciones para optimizar consultas (evitar N+1)
+        // 1. Ejecutar la consulta aplicando consecutivamente los scopes individuales
         $movements = Movement::with(['product', 'movementType', 'user'])
-                             ->orderBy('created_at', 'desc')
-                             ->paginate(15);
-                             
-        return view('movements.index', compact('movements'));
+            ->ofProduct($request->input('product'))
+            ->ofType($request->input('movement_type_id'))
+            ->ofDate($request->input('date'))
+            ->ofUser($request->input('user'))
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        // 2. Obtener los tipos de movimiento para el select del filtro
+        $movementTypes = MovementType::all();
+
+        return view('movements.index', compact('movements', 'movementTypes'));
     }
 
     public function create()

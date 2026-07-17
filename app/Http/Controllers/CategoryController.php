@@ -7,9 +7,14 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::paginate(10);
+        $categories = Category::query()
+            ->searchByName($request->input('search'))
+            ->orderBy('name', 'asc')
+            ->paginate(10)
+            ->withQueryString(); // Conserva los filtros al cambiar de página
+
         return view('categories.index', compact('categories'));
     }
 
