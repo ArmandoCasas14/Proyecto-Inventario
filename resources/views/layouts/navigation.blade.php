@@ -33,6 +33,10 @@
                     <x-nav-link class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400    ms-2" :href="route('proveedores.index')" :active="request()->routeIs('proveedores.*')">
                         {{ __('Proveedores') }}
                     </x-nav-link>
+
+                    <x-nav-link class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400    ms-2" :href="route('movimientos.index')" :active="request()->routeIs('movimientos.*')">
+                        {{ __('Movimientos') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -97,6 +101,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('proveedores.index')" :active="request()->routeIs('proveedores.*')">
                 {{ __('Proveedores') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('movimientos.index')" :active="request()->routeIs('movimientos.*')">
+                {{ __('Movimientos') }}
             </x-responsive-nav-link>
         </div>
 

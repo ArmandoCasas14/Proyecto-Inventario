@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\MovementController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('suppliers', SupplierController::class)->names('proveedores');
     Route::resource('products', ProductController::class)->names('productos');
     Route::resource('invoices', InvoiceController::class)->names('facturas');
+    Route::resource('movements', MovementController::class)->names('movimientos')->only(['index', 'create', 'store']);
 });
 
 require __DIR__.'/auth.php';

@@ -1,243 +1,255 @@
 <x-app-layout>
-    <div class="py-10" x-data="invoicePOS({{ $products->toJson() }})">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
-            <template x-if="message">
-                <div class="mb-6 p-4 bg-emerald-50 dark:bg-emerald-950/30 border-l-4 border-emerald-500 rounded-r-xl flex items-center justify-between shadow-xs">
-                    <span class="text-sm font-semibold text-emerald-800 dark:text-emerald-300" x-text="message"></span>
-                    <button @click="message = ''" class="text-emerald-500 hover:text-emerald-700 font-bold">×</button>
-                </div>
-            </template>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Módulo de Facturación e Ingreso de Ventas') }}
+        </h2>
+    </x-slot>
 
-            <form action="{{ route('facturas.store') }}" method="POST">
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @if(session('error'))
+                <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative shadow">
+                    <span class="block sm:inline">{{ session('error') }}</span>
+                </div>
+            @endif
+
+            <form action="{{ route('facturas.store') }}" method="POST" id="invoice-form">
                 @csrf
                 
-                <template x-for="(item, index) in cart" :key="item.product_id">
-                    <div>
-                        <input type="hidden" :name="'items['+index+'][product_id]'" :value="item.product_id">
-                        <input type="hidden" :name="'items['+index+'][quantity]'" :value="item.quantity">
-                        <input type="hidden" :name="'items['+index+'][unit_price]'" :value="item.unit_price">
-                    </div>
-                </template>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    
-                    <div class="space-y-6">
-                        
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-150 dark:border-gray-700 shadow-sm">
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                <span>👤</span> Datos del Cliente
-                            </h3>
-
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Nombre Completo</label>
-                                    <input type="text" name="customer_name" required placeholder="Consumidor Final"
-                                           class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500 shadow-xs">
-                                </div>
-
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Método de Pago</label>
-                                    <select name="payment_type" required
-                                            class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500 shadow-xs">
-                                        <option value="Efectivo">💵 Efectivo</option>
-                                        <option value="Tarjeta">💳 Tarjeta</option>
-                                        <option value="Transferencia">📱 Transferencia bancaria</option>
-                                    </select>
-                                </div>
-                            </div>
+                <!-- SECCIÓN 1: DATOS CABECERA DE LA FACTURA -->
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6 mb-6">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 border-b pb-2">Información General</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="customer_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cliente / Razón Social</label>
+                            <input type="text" name="customer_name" id="customer_name" value="{{ old('customer_name', 'Cliente General') }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm" required>
                         </div>
-
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-150 dark:border-gray-700 shadow-sm">
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                <span>🔍</span> Añadir Producto
-                            </h3>
-
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Producto</label>
-                                    <select x-model="selectedProductId" @change="updateSelectedProductDetails()"
-                                            class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500 shadow-xs">
-                                        <option value="">-- Seleccionar producto --</option>
-                                        <template x-for="p in products" :key="p.id">
-                                            <option :value="p.id" x-text="p.name + ' - Stock: ' + p.current_stock"></option>
-                                        </template>
-                                    </select>
-                                </div>
-
-                                <template x-if="currentProduct">
-                                    <div class="p-3 bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/40 rounded-xl space-y-1">
-                                        <div class="flex justify-between text-xs">
-                                            <span class="text-gray-500 dark:text-gray-400">Precio Unitario:</span>
-                                            <span class="font-bold text-indigo-600 dark:text-indigo-400" x-text="'$' + parseFloat(currentProduct.selling_price).toFixed(2)"></span>
-                                        </div>
-                                        <div class="flex justify-between text-xs">
-                                            <span class="text-gray-500 dark:text-gray-400">Stock Actual:</span>
-                                            <span class="font-bold" :class="currentProduct.current_stock <= currentProduct.minimum_stock ? 'text-red-500' : 'text-emerald-600 dark:text-emerald-400'" x-text="currentProduct.current_stock"></span>
-                                        </div>
-                                    </div>
-                                </template>
-
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Cantidad a Vender</label>
-                                    <input type="number" x-model="selectedQuantity" min="1"
-                                           class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500 shadow-xs">
-                                </div>
-
-                                <button type="button" @click="addToCart()"
-                                        class="w-full inline-flex justify-center items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-xl shadow-md transition duration-150 text-sm">
-                                    <span>➕</span> Agregar a la Tabla
-                                </button>
-                            </div>
+                        <div>
+                            <label for="payment_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Forma de Pago</label>
+                            <select name="payment_type" id="payment_type" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm" required>
+                                <option value="Efectivo">Efectivo</option>
+                                <option value="Transferencia">Transferencia Bancaria</option>
+                                <option value="Tarjeta">Tarjeta</option>
+                            </select>
                         </div>
-
                     </div>
-
-                    <div class="lg:col-span-2 space-y-6">
-                        
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-sm overflow-hidden flex flex-col h-full">
-                            <div class="bg-indigo-600 dark:bg-indigo-900 text-white px-8 py-5 flex items-center justify-between">
-                                <div>
-                                    <h2 class="text-xl font-extrabold tracking-tight">Detalles de la Factura</h2>
-                                    <p class="text-indigo-200 text-xs mt-1">Revisa los productos agregados a la transacción actual.</p>
-                                </div>
-                                <div class="bg-indigo-500 dark:bg-indigo-800/80 px-4 py-2 rounded-xl border border-indigo-400/35">
-                                    <span class="text-[10px] uppercase font-bold tracking-wider block text-indigo-200">Total Acumulado</span>
-                                    <span class="text-2xl font-black" x-text="'$' + cartTotal.toFixed(2)">$0.00</span>
-                                </div>
-                            </div>
-
-                            <div class="p-6 flex-1">
-                                <div class="overflow-x-auto rounded-xl border border-gray-150 dark:border-gray-750">
-                                    <table class="w-full text-left border-collapse">
-                                        <thead>
-                                            <tr class="bg-gray-50 dark:bg-gray-900/40 border-b border-gray-150 dark:border-gray-700 text-gray-400 dark:text-gray-500 font-bold text-[11px] uppercase tracking-wider">
-                                                <th class="px-6 py-4">Código</th>
-                                                <th class="px-6 py-4">Producto</th>
-                                                <th class="px-6 py-4 text-center">Cantidad</th>
-                                                <th class="px-6 py-4 text-right">Precio Unitario</th>
-                                                <th class="px-6 py-4 text-right">Subtotal</th>
-                                                <th class="px-6 py-4 text-center">Remover</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-                                            <template x-if="cart.length === 0">
-                                                <tr>
-                                                    <td colspan="6" class="px-6 py-16 text-center text-gray-400 dark:text-gray-500">
-                                                        <span class="text-4xl block mb-2">🛒</span>
-                                                        <p class="font-bold">El detalle de la venta está vacío.</p>
-                                                        <p class="text-xs mt-1">Busca un producto y agrégalo para comenzar.</p>
-                                                    </td>
-                                                </tr>
-                                            </template>
-
-                                            <template x-for="(item, index) in cart" :key="item.product_id">
-                                                <tr class="hover:bg-indigo-50/10 dark:hover:bg-indigo-950/5 transition">
-                                                    <td class="px-6 py-4 text-sm font-mono text-gray-400 dark:text-gray-500" x-text="item.code"></td>
-                                                    <td class="px-6 py-4 text-sm font-bold text-gray-900 dark:text-white" x-text="item.name"></td>
-                                                    <td class="px-6 py-4 text-sm text-center font-semibold text-gray-700 dark:text-gray-300" x-text="item.quantity"></td>
-                                                    <td class="px-6 py-4 text-sm text-right font-medium text-gray-900 dark:text-white" x-text="'$' + item.unit_price.toFixed(2)"></td>
-                                                    <td class="px-6 py-4 text-sm text-right font-bold text-indigo-600 dark:text-indigo-400" x-text="'$' + (item.quantity * item.unit_price).toFixed(2)"></td>
-                                                    <td class="px-6 py-4 text-center">
-                                                        <button type="button" @click="removeItem(index)"
-                                                                class="inline-flex p-1.5 rounded-lg bg-red-50 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-950/40 text-red-600 dark:text-red-400 transition">
-                                                            🗑️
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            </template>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div class="p-6 bg-gray-50 dark:bg-gray-900/20 border-t border-gray-150 dark:border-gray-700 flex justify-end">
-                                <button type="submit" ::disabled="cart.length === 0"
-                                        class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-8 rounded-xl shadow-md transition duration-150 text-sm disabled:opacity-50 disabled:cursor-not-allowed">
-                                    <span>💾</span> Emitir y Registrar Venta
-                                </button>
-                            </div>
-
-                        </div>
-
-                    </div>
-
                 </div>
+
+                <!-- SECCIÓN 2: ENTRADA DE PRODUCTOS (CÓDIGO O BUSCADOR) -->
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6 mb-6">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 border-b pb-2">Ingreso de Artículos</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <!-- Entrada por Código Único -->
+                        <div>
+                            <label for="product_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Código Único (Ej: prod-431)</label>
+                            <input type="text" id="product_code" placeholder="Escriba el código y presione Enter" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm font-mono text-indigo-600 dark:text-indigo-400">
+                        </div>
+
+                        <!-- Entrada por Buscador de Nombre -->
+                        <div>
+                            <label for="product_selector" class="block text-sm font-medium text-gray-700 dark:text-gray-300">O buscar por Nombre</label>
+                            <select id="product_selector" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm">
+                                <option value="">-- Seleccione un producto --</option>
+                                @foreach($products as $product)
+                                    <!-- Guardamos el código único en data-code -->
+                                    <option value="{{ $product->id }}" data-code="{{ $product->code }}" data-name="{{ $product->name }}" data-price="{{ $product->selling_price }}" data-stock="{{ $product->current_stock }}">
+                                        {{ $product->name }} (Ref: {{ $product->code }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <button type="button" id="btn-add-product" class="w-full inline-flex justify-center items-center px-4 py-2.5 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:outline-none shadow">
+                                + Agregar Fila
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 3: TABLA DE DETALLE INTERNA -->
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 border-b pb-2">Artículos a Facturar</h3>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-4 py-3">Código</th>
+                                    <th scope="col" class="px-4 py-3">Descripción</th>
+                                    <th scope="col" class="px-4 py-3 text-center" style="width: 100px;">Precio Unit.</th>
+                                    <th scope="col" class="px-4 py-3 text-center" style="width: 120px;">Cantidad</th>
+                                    <th scope="col" class="px-4 py-3 text-right">Subtotal</th>
+                                    <th scope="col" class="px-4 py-3 text-center">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detail-wrapper">
+                                <tr id="empty-row">
+                                    <td colspan="6" class="px-4 py-8 text-center text-gray-400 italic">Ningún artículo cargado en este documento.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Totales y Envío -->
+                    <div class="border-t mt-6 pt-4 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div class="text-left">
+                            <span class="text-sm text-gray-500 dark:text-gray-400">Monto Total Liquidado:</span>
+                            <div class="text-3xl font-black text-indigo-600 dark:text-indigo-400" id="grand-total">$0.00</div>
+                        </div>
+
+                        <div class="flex space-x-3">
+                            <a href="{{ route('facturas.index') }}" class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="inline-flex items-center px-6 py-3 bg-green-600 border border-transparent rounded-md font-bold text-xs text-white uppercase tracking-widest hover:bg-green-700 shadow-md">
+                                Guardar y Emitir Factura
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
             </form>
         </div>
     </div>
 
+    <!-- CONTROLADOR JAVASCRIPT DE LA TABLA TEMPORAL -->
     <script>
-        function invoicePOS(productsList) {
-            return {
-                products: productsList,
-                selectedProductId: '',
-                selectedQuantity: 1,
-                currentProduct: null,
-                cart: [],
-                message: '',
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputCode = document.getElementById('product_code');
+            const selector = document.getElementById('product_selector');
+            const btnAdd = document.getElementById('btn-add-product');
+            const detailWrapper = document.getElementById('detail-wrapper');
+            const emptyRow = document.getElementById('empty-row');
+            const grandTotalLabel = document.getElementById('grand-total');
+            
+            let itemIndex = 0;
 
-                updateSelectedProductDetails() {
-                    this.currentProduct = this.products.find(p => p.id == this.selectedProductId) || null;
-                    this.selectedQuantity = 1;
-                },
-
-                addToCart() {
-                    if (!this.currentProduct) {
-                        alert('Selecciona un producto válido primero.');
-                        return;
-                    }
-
-                    const qty = parseInt(this.selectedQuantity);
-                    if (qty <= 0) {
-                        alert('La cantidad debe ser mayor a 0.');
-                        return;
-                    }
-
-                    // Validar Stock actual
-                    if (qty > this.currentProduct.current_stock) {
-                        alert(`Stock insuficiente. Solo quedan ${this.currentProduct.current_stock} unidades.`);
-                        return;
-                    }
-
-                    // Validar si ya está en el carrito para unificar cantidades
-                    const existingIndex = this.cart.findIndex(item => item.product_id === this.currentProduct.id);
-                    if (existingIndex !== -1) {
-                        const newQty = this.cart[existingIndex].quantity + qty;
-                        if (newQty > this.currentProduct.current_stock) {
-                            alert(`No puedes agregar más de esta cantidad. Superaría el stock disponible (${this.currentProduct.current_stock}).`);
-                            return;
-                        }
-                        this.cart[existingIndex].quantity = newQty;
-                    } else {
-                        this.cart.push({
-                            product_id: this.currentProduct.id,
-                            name: this.currentProduct.name,
-                            code: this.currentProduct.code,
-                            quantity: qty,
-                            unit_price: parseFloat(this.currentProduct.selling_price)
-                        });
-                    }
-
-                    this.message = `¡"${this.currentProduct.name}" agregado a los detalles de venta!`;
-                    
-                    // Limpiar el selector
-                    this.selectedProductId = '';
-                    this.currentProduct = null;
-                    this.selectedQuantity = 1;
-
-                    // Limpiar la notificación después de unos segundos
-                    setTimeout(() => this.message = '', 3500);
-                },
-
-                removeItem(index) {
-                    this.cart.splice(index, 1);
-                },
-
-                get cartTotal() {
-                    return this.cart.reduce((acc, item) => acc + (item.quantity * item.unit_price), 0);
+            // Al cambiar el buscador por nombre, autocompleta el campo de código único
+            selector.addEventListener('change', function() {
+                if(this.value) {
+                    const selectedOption = this.options[this.selectedIndex];
+                    inputCode.value = selectedOption.dataset.code;
                 }
+            });
+
+            // Si el usuario escribe el código y presiona ENTER, agrega automáticamente el producto
+            inputCode.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault(); // Evita que se envíe el formulario por error
+                    processSelection();
+                }
+            });
+
+            // Si le da clic al botón Agregar
+            btnAdd.addEventListener('click', processSelection);
+
+            function processSelection() {
+                const codeValue = inputCode.value.trim().toLowerCase();
+                if (!codeValue) return alert('Ingrese un código único o busque por nombre.');
+
+                // Buscar las propiedades del producto dentro del select de datos
+                let optionFound = null;
+                for (let i = 0; i < selector.options.length; i++) {
+                    const opt = selector.options[i];
+                    if (opt.dataset.code && opt.dataset.code.toLowerCase() === codeValue) {
+                        optionFound = opt;
+                        break;
+                    }
+                }
+
+                if (!optionFound) {
+                    return alert('El código de producto no existe o está inactivo.');
+                }
+
+                const productId = optionFound.value;
+                const code = optionFound.dataset.code;
+                const name = optionFound.dataset.name;
+                const price = parseFloat(optionFound.dataset.price);
+                const maxStock = parseInt(optionFound.dataset.stock);
+
+                // Comprobar si ya existe en la tabla. Si existe, le sumamos 1 a su cantidad.
+                const existingInput = document.querySelector(`input[value="${productId}"][name*="product_id"]`);
+                if (existingInput) {
+                    const row = existingInput.closest('tr');
+                    const qtyInput = row.querySelector('.qty-input');
+                    let currentQty = parseInt(qtyInput.value) || 0;
+                    if (currentQty >= maxStock) {
+                        alert(`No puedes agregar más. El stock máximo en bodega es: ${maxStock}`);
+                        return;
+                    }
+                    qtyInput.value = currentQty + 1;
+                    qtyInput.dispatchEvent(new Event('input')); // Disparar recálculo
+                    clearInputs();
+                    return;
+                }
+
+                // Remover fila vacía
+                if (emptyRow && emptyRow.parentNode) emptyRow.remove();
+
+                // Construcción de la fila del detalle
+                const tr = document.createElement('tr');
+                tr.className = 'border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 item-row';
+                tr.innerHTML = `
+                    <td class="px-4 py-4 font-mono text-xs font-bold text-gray-400">${code}</td>
+                    <td class="px-4 py-4 font-medium text-gray-900 dark:text-white">
+                        ${name}
+                        <input type="hidden" name="items[${itemIndex}][product_id]" value="${productId}">
+                    </td>
+                    <td class="px-4 py-4 text-center font-mono">$${price.toFixed(2)}</td>
+                    <td class="px-4 py-4 text-center">
+                        <input type="number" name="items[${itemIndex}][quantity]" value="1" min="1" max="${maxStock}" class="qty-input block w-20 text-center rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm sm:text-sm mx-auto" data-price="${price}">
+                    </td>
+                    <td class="px-4 py-4 text-right font-bold font-mono text-gray-900 dark:text-white row-subtotal">$${price.toFixed(2)}</td>
+                    <td class="px-4 py-4 text-center">
+                        <button type="button" class="text-red-500 hover:text-red-700 font-bold btn-remove">Eliminar</button>
+                    </td>
+                `;
+
+                detailWrapper.appendChild(tr);
+                itemIndex++;
+                calculateGrandTotal();
+                clearInputs();
+
+                // Listener de cambios en la cantidad de esta fila específica
+                tr.querySelector('.qty-input').addEventListener('input', function() {
+                    let qty = parseInt(this.value) || 0;
+                    if(qty > maxStock) {
+                        alert(`Excede las existencias. Máximo disponible: ${maxStock}`);
+                        this.value = maxStock;
+                        qty = maxStock;
+                    }
+                    const subtotal = qty * price;
+                    tr.querySelector('.row-subtotal').innerText = `$${subtotal.toFixed(2)}`;
+                    calculateGrandTotal();
+                });
+
+                // Listener para remover fila
+                tr.querySelector('.btn-remove').addEventListener('click', function() {
+                    tr.remove();
+                    if (detailWrapper.querySelectorAll('.item-row').length === 0) {
+                        detailWrapper.appendChild(emptyRow);
+                    }
+                    calculateGrandTotal();
+                });
             }
-        }
+
+            function clearInputs() {
+                inputCode.value = "";
+                selector.value = "";
+                inputCode.focus(); // Mantiene el cursor listo para la siguiente lectura de código
+            }
+
+            function calculateGrandTotal() {
+                let total = 0;
+                document.querySelectorAll('.item-row').forEach(row => {
+                    const qty = parseInt(row.querySelector('.qty-input').value) || 0;
+                    const price = parseFloat(row.querySelector('.qty-input').dataset.price);
+                    total += (qty * price);
+                });
+                grandTotalLabel.innerText = `$${total.toFixed(2)}`;
+            }
+        });
     </script>
 </x-app-layout>

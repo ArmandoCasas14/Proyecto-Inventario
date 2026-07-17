@@ -75,10 +75,7 @@ class InvoiceController extends Controller
                 ]);
 
                 // 3. Asegurar que existe el tipo de movimiento "Venta" (Salida)
-                $movementType = MovementType::firstOrCreate(
-                    ['name' => 'Venta'],
-                    ['type' => 'salida'] 
-                );
+                $movementType = MovementType::where('name', 'Venta')->firstOrFail();
 
                 // 4. Procesar cada producto: registrar detalle, restar stock, registrar auditoría
                 foreach ($prepararItems as $item) {
