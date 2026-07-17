@@ -7,11 +7,41 @@ use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Traemos todos los proveedores
-        $suppliers = Supplier::paginate(10);
+        $suppliers = Supplier::query()
+            ->search($request->input('search'))
+            ->ofStatus($request->input('status'))
+            ->orderBy('legal_name', 'asc')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('suppliers.index', compact('suppliers'));
+    }
+
+    public function toggleStatus(Supplier $supplier)
+    {
+        // 1. Si el proveedor está ACTIVO e intentan INACTIVARLO (pasar a 0)
+        if ($supplier->status == 1) {
+            
+            // Verificamos si tiene productos asociados
+            if ($supplier->products()->exists()) {
+                return redirect()->route('proveedores.index')->with(
+                    'error', 
+                    "No se puede inactivar el proveedor '{$supplier->legal_name}' porque tiene productos vinculados en el sistema."
+                );
+            }
+        }
+
+        // 2. Si pasa la validación (o si se está activando), conmutamos el estado
+        $supplier->status = $supplier->status ? 0 : 1;
+        $supplier->save();
+
+        $mensaje = $supplier->status 
+            ? 'El proveedor ha sido activado correctamente.' 
+            : 'El proveedor ha sido desactivado correctamente.';
+
+        return redirect()->route('proveedores.index')->with('success', $mensaje);
     }
 
     public function create()
