@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('categories/{category}/toggle', [CategoryController::class, 'toggleStatus'])->name('categorias.toggleStatus');
     Route::patch('products/{product}/toggle', [ProductController::class, 'toggleStatus'])->name('productos.toggleStatus');
 });
+});
 Route::resource('users', UserController::class);
 
 require __DIR__.'/auth.php';
