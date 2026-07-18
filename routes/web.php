@@ -27,12 +27,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('suppliers', SupplierController::class)->names('proveedores');
     Route::resource('products', ProductController::class)->names('productos');
     Route::resource('invoices', InvoiceController::class)->names('facturas');
+    Route::resource('users', UserController::class)->names('usuarios');
     Route::resource('movements', MovementController::class)->names('movimientos')->only(['index', 'create', 'store']);
     Route::patch('suppliers/{supplier}/toggle', [SupplierController::class, 'toggleStatus'])->name('proveedores.toggleStatus');
     Route::patch('categories/{category}/toggle', [CategoryController::class, 'toggleStatus'])->name('categorias.toggleStatus');
     Route::patch('products/{product}/toggle', [ProductController::class, 'toggleStatus'])->name('productos.toggleStatus');
 });
 });
-Route::resource('users', UserController::class);
+
 
 require __DIR__.'/auth.php';
