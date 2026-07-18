@@ -23,7 +23,7 @@ php artisan storage:link --force || true
 
 # Ejecutar migraciones automáticamente
 echo "Ejecutando migraciones de base de datos..."
-php artisan migrate:fresh --seed --force
+php artisan migrate:fresh --seed --seeder=NombreDeTuSeeder --force
 
 # Iniciar PHP-FPM en segundo plano
 php-fpm -D
