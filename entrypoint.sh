@@ -27,6 +27,7 @@ php artisan migrate:fresh --seed --seeder=CatalogoSeeder --force
 
 # Iniciar PHP-FPM en segundo plano
 php-fpm -D
+npm run build
 
 # Arrancar el servidor web Nginx en primer plano
 echo "Iniciando Nginx..."
