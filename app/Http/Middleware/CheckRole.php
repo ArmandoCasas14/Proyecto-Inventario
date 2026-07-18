@@ -42,4 +42,4 @@ class CheckRole
         // Para las vistas web, disparamos el error 403 nativo de Laravel
         abort(403, 'No tienes permiso para realizar esta acción.');
     }
-}
+}   

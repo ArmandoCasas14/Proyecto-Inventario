@@ -43,7 +43,7 @@ class UserController extends Controller
 
         $user->update($request->only(['name', 'email', 'role_id', 'status']));
 
-        return redirect()->route('users.index')->with('success', 'Usuario actualizado correctamente.');
+        return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado correctamente.');
     }
     // Guarda el nuevo usuario
     public function store(Request $request)
@@ -63,6 +63,6 @@ class UserController extends Controller
             'status'   => 1,
         ]);
 
-        return redirect()->route('users.index')->with('success', 'Usuario creado exitosamente.');
+        return redirect()->route('usuarios.index')->with('success', 'Usuario creado exitosamente.');
     }
 }

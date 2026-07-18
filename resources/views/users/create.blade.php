@@ -9,7 +9,7 @@
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 p-6 shadow-sm sm:rounded-lg">
                 <!-- Usamos 'users.store' como ruta -->
-                <form method="POST" action="{{ route('users.store') }}" class="space-y-6">
+                <form method="POST" action="{{ route('usuarios.store') }}" class="space-y-6">
                     @csrf
 
                     <!-- Nombre -->
@@ -52,7 +52,7 @@
                     </div>
 
                     <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
-                        <a href="{{ route('users.index') }}"
+                        <a href="{{ route('usuarios.index') }}"
                            class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-600 transition">
                             {{ __('Cancelar') }}
                         </a>

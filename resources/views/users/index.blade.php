@@ -5,7 +5,7 @@
                 {{ __('Gestión de Usuarios') }}
             </h2>
             <!-- Puedes añadir un botón para crear usuario si lo necesitas -->
-            <a href="{{ route('users.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition">
+            <a href="{{ route('usuarios.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition">
                 + Nuevo Usuario
             </a>
         </div>
@@ -21,7 +21,7 @@
 
             <!-- Filtros -->
             <div class="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
-                <form action="{{ route('users.index') }}" method="GET" class="space-y-4">
+                <form action="{{ route('usuarios.index') }}" method="GET" class="space-y-4">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">Buscar</label>
@@ -41,7 +41,7 @@
                                 Buscar
                             </button>
                             @if(request()->anyFilled(['search', 'role_id']))
-                                <a href="{{ route('users.index') }}" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold text-xs uppercase rounded-md hover:bg-gray-300 transition">
+                                <a href="{{ route('usuarios.index') }}" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold text-xs uppercase rounded-md hover:bg-gray-300 transition">
                                     Limpiar
                                 </a>
                             @endif
@@ -75,7 +75,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-right">
-                                    <a href="{{ route('users.edit', $user->id) }}" class="text-indigo-600 hover:text-indigo-900 font-semibold">Editar</a>
+                                    <a href="{{ route('usuarios.edit', $user->id) }}" class="text-indigo-600 hover:text-indigo-900 font-semibold">Editar</a>
                                 </td>
                             </tr>
                             @empty
