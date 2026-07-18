@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->string('customer_name'); // cliente_nombre
+            $table->string('customer_name',100); // cliente_nombre
             $table->decimal('total', 10, 2);
             $table->enum('payment_type', ['efectivo', 'transferencia', 'tarjeta'])->default('efectivo');
             $table->timestamps();
