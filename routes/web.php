@@ -24,7 +24,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::middleware(['role:Administrador,Encargado de inventario'])->group(function () {
-    Route::resource('categories', CategoryController::class)->names('categorias');
     Route::resource('suppliers', SupplierController::class)->names('proveedores');
     Route::resource('products', ProductController::class)->names('productos');
     Route::resource('invoices', InvoiceController::class)->names('facturas');
@@ -35,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('products/{product}/toggle', [ProductController::class, 'toggleStatus'])->name('productos.toggleStatus');
     route::middleware(['role:Administrador'])->group(function () {
         route::resource('users', UserController::class)->names('usuarios');
+        Route::resource('categories', CategoryController::class)->names('categorias');
     });
 });
 });
