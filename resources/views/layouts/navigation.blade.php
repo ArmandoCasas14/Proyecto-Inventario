@@ -37,6 +37,10 @@
                     <x-nav-link class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400    ms-2" :href="route('movimientos.index')" :active="request()->routeIs('movimientos.*')">
                         {{ __('Movimientos') }}
                     </x-nav-link>
+
+                    <x-nav-link class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400    ms-2" :href="route('usuarios.index')" :active="request()->routeIs('usuarios.*')">
+                        {{ __('Usuarios') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -104,6 +108,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('movimientos.index')" :active="request()->routeIs('movimientos.*')">
                 {{ __('Movimientos') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('usuarios.index')" :active="request()->routeIs('usuarios.*')">
+                {{ __('Usuarios') }}
             </x-responsive-nav-link>
         </div>
 
