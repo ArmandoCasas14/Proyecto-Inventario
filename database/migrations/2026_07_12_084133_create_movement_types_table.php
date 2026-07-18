@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('movement_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('type');
+            $table->string('name',100);
+            $table->string('type',50);
             $table->timestamps();
         });
     }

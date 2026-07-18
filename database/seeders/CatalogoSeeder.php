@@ -23,7 +23,7 @@ class CatalogoSeeder extends Seeder
             Role::create(['name' => $rol]);
         }
         User::firstOrCreate(
-            ['email' => 'admin@sistema.com'], 
+            ['email' => 'luis807.555@gmail.com'], 
             [
                 'name'     => 'Administrador General',
                 'password' => Hash::make('password123'),

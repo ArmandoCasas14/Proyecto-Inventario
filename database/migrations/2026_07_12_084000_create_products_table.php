@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
-            $table->string('name');
+            $table->string('code',10)->unique();
+            $table->string('name',100);
             $table->text('description')->nullable();
             $table->foreignId('category_id')->constrained('categories');
             $table->foreignId('supplier_id')->nullable()->constrained('suppliers');// el producto puede ser hecho en la empresa 
