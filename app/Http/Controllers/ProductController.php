@@ -94,12 +94,11 @@ class ProductController extends Controller
             'supplier_id'    => 'required|exists:suppliers,id',
             'purchase_price' => 'required|numeric|min:0',
             'selling_price'  => 'required|numeric|min:0',
-            'current_stock'  => 'required|integer|min:0',
             'minimum_stock'  => 'required|integer|min:0',
             'status'         => 'required|boolean',
         ]);
 
-        $product->update($request->all());
+        $product->update($request->except('current_stock')); // Evitamos actualizar el stock actual desde aquí
 
         return redirect()->route('productos.index')->with('success', 'Producto actualizado con éxito.');
     }

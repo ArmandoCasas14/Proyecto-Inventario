@@ -82,8 +82,9 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
                             <x-input-label for="current_stock" :value="__('Stock Actual')" />
-                            <x-text-input id="current_stock" name="current_stock" type="number" min="0"
-                                          class="mt-1 block w-full" :value="old('current_stock', $product->current_stock)" required />
+                            
+                            <x-text-input id="current_stock" name="current_stock"  type="number" 
+                                        min="0" class="mt-1 block w-full bg-gray-100 text-gray-500 cursor-not-allowed" :value="old('current_stock', $product->current_stock)" required readonly /> 
                             <x-input-error :messages="$errors->get('current_stock')" class="mt-2" />
                         </div>
 

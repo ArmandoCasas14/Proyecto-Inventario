@@ -99,6 +99,7 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+                                        @if(auth()->user()->role->name === 'Administrador')
                                         <div class="flex items-center justify-end gap-2">
                                             
                                             <!-- EDITAR (Mantiene tu diseño original) -->
@@ -135,6 +136,7 @@
                                                 @endif
                                             </form>
                                         </div>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty

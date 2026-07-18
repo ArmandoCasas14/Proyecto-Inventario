@@ -63,11 +63,18 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
+        if (auth()->user()->role->name !== 'Administrador') {
+        abort(403, 'No tienes permiso para editar categorías.');
+    }
+
         return view('categories.edit', compact('category'));
     }
 
     public function update(Request $request, Category $category)
     {
+        if (auth()->user()->role->name !== 'Administrador') {
+        abort(403, 'No tienes permiso para actualizar categorías.');
+    }
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',

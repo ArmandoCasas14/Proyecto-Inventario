@@ -37,10 +37,11 @@
                     <x-nav-link class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400    ms-2" :href="route('movimientos.index')" :active="request()->routeIs('movimientos.*')">
                         {{ __('Movimientos') }}
                     </x-nav-link>
-
+                    @if(auth()->user()->role->name === 'Administrador')
                     <x-nav-link class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400    ms-2" :href="route('usuarios.index')" :active="request()->routeIs('usuarios.*')">
                         {{ __('Usuarios') }}
                     </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -109,9 +110,11 @@
             <x-responsive-nav-link :href="route('movimientos.index')" :active="request()->routeIs('movimientos.*')">
                 {{ __('Movimientos') }}
             </x-responsive-nav-link>
+            @if(auth()->user()->role->name === 'Administrador')
             <x-responsive-nav-link :href="route('usuarios.index')" :active="request()->routeIs('usuarios.*')">
                 {{ __('Usuarios') }}
             </x-responsive-nav-link>
+            @endif
         </div>
 
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
