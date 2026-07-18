@@ -7,6 +7,8 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MovementController;
+use App\Http\Controllers\UserController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -30,12 +32,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('categories/{category}/toggle', [CategoryController::class, 'toggleStatus'])->name('categorias.toggleStatus');
     Route::patch('products/{product}/toggle', [ProductController::class, 'toggleStatus'])->name('productos.toggleStatus');
 });
-    route::middleware(['role:Administrador'])->group(function () {
-        Route::resource('categories', \App\Http\Controllers\CategoryController::class)
-            ->only(['edit', 'update'])
-            ->names('categorias');
-    });
-    
-});
+Route::resource('users', UserController::class);
 
 require __DIR__.'/auth.php';
