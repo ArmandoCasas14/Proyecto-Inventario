@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('customer_name',100); // cliente_nombre
             $table->decimal('total', 10, 2);
-            $table->enum('payment_type', ['efectivo', 'transferencia', 'tarjeta'])->default('efectivo');
+            $table->enum('payment_type', ['Efectivo', 'Transferencia', 'Tarjeta'])->default('efectivo');
             $table->timestamps();
         });
     }
