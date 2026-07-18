@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Database\Factories\MovementFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
 use App\Models\Role;
 use App\Models\Category;
