@@ -30,7 +30,7 @@ class AuthController extends Controller
                     ->mixedCase()     // Exige al menos una mayúscula y una minúscula
                     ->numbers()       // Exige al menos un número
                     ->symbols()       // Exige al menos un carácter especial (!@#$%^&*...)
-                    // ->uncompromised() // Opcional: verifica que la contraseña no haya sido filtrada en hackeos de internet
+                    // ->uncompromised() // Opcional: verifica que la contraseña n o haya sido filtrada en hackeos de internet
             ],
             'role_id' => 'required|exists:roles,id',
         ]);

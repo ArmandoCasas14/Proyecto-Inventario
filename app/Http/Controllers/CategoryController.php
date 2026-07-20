@@ -52,8 +52,8 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'name' => 'required|string|max:100|unique:categories,name',
+            'description' => 'nullable|string|max:500',
         ]);
 
         Category::create($request->all());
@@ -76,8 +76,8 @@ class CategoryController extends Controller
         abort(403, 'No tienes permiso para actualizar categorías.');
     }
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'name' => 'required|string|max:100|unique:categories,name',
+            'description' => 'nullable|string|max:500',
         ]);
 
         $category->update($request->all());
