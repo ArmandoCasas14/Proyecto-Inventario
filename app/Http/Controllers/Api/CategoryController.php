@@ -30,7 +30,7 @@ class CategoryController extends Controller
     {
         // 1. Validamos que el nombre sea obligatorio y único en la tabla
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name',
+            'name' => 'required|string|max:100|unique:categories,name',
             'description' => 'nullable|string|max:500',
         ]);
 
@@ -86,8 +86,8 @@ class CategoryController extends Controller
         // Fíjate en el 'unique:categories,name,' . $id
         // Esto le dice a Laravel: "valida que el nombre sea único, pero ignora este ID"
         $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:255|unique:categories,name,' . $id,
-            'description' => 'nullable|string|max:500',
+            'name' => 'sometimes|required|string|max:100|unique:categories,name,' . $id,
+            'description' => 'nullable|string|max:255',
         ]);
 
         // 3. Actualizamos

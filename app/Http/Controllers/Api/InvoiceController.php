@@ -29,7 +29,7 @@ class InvoiceController extends Controller
         
         // Validamos basándonos en tu $fillable
         $validated = $request->validate([
-            'customer_name' => 'required|string|max:255',
+            'customer_name' => 'required|string|max:100',
             'total'         => 'required|numeric|min:0',
             'payment_type'  => 'required|string|max:50'
         ]);
@@ -85,7 +85,7 @@ class InvoiceController extends Controller
 
         // 2. Validamos los datos (usando 'sometimes' para permitir actualizaciones parciales)
         $validated = $request->validate([
-            'customer_name' => 'sometimes|required|string|max:255',
+            'customer_name' => 'sometimes|required|string|max:100',
             'total'         => 'sometimes|required|numeric|min:0',
             'payment_type'  => 'sometimes|required|string|max:50'
         ]);
