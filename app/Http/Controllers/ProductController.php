@@ -6,13 +6,15 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProductController extends Controller
 {
     public function index(Request $request)
     {
         // 1. Aplicamos los Scopes leyendo los datos de la URL ($request)
-        $products = Product::search($request->get('search'))
+        $products = Product::with(['category', 'supplier'])
+                           ->search($request->get('search'))
                            ->ofCategory($request->get('category_id'))
                            ->stockStatus($request->get('stock'))
                            ->ofStatus($request->input('status'))
@@ -24,6 +26,24 @@ class ProductController extends Controller
         $categories = Category::orderBy('name', 'asc')->get();
 
         return view('products.index', compact('products', 'categories'));
+    }
+
+    public function exportPdf(Request $request)
+    {
+        // Obtener las tareas con los mismos filtros que en index
+        $query = Product::with(['category', 'supplier']);
+        $query->search($request->get('search'))
+                           ->ofCategory($request->get('category_id'))
+                           ->stockStatus($request->get('stock'))
+                           ->ofStatus($request->input('status'))
+                           ->orderBy('name', 'asc');
+        $products = $query->latest()->get(); // Obtener todas (sin paginación para el PDF)
+
+        // Cargar la vista del PDF con los datos
+        $pdf = Pdf::loadView('pdf.products', compact('products'));
+
+        // Descargar el PDF con un nombre personalizado
+        return $pdf->download('listado-productos-' . date('Y-m-d') . '.pdf');
     }
 
      public function toggleStatus(Product $product)
