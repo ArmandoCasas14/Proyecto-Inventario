@@ -12,7 +12,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OtpVerificationController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 Route::get('/otp-verify', [OtpVerificationController::class, 'show'])->name('otp.verify');
 Route::post('/otp-verify', [OtpVerificationController::class, 'verify'])->name('otp.verify.post');
