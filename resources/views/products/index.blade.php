@@ -216,7 +216,7 @@
                                                     </a>
                                                     @if(auth()->user()->role->name === 'Administrador')
                                                     <form action="{{ route('productos.toggleStatus', $product) }}" method="POST"
-                                                  class="form-toggle-status inline">
+                                                    data-confirm="{{ $product->status ? __('¿Estás seguro de que deseas inactivar este producto?') : __('¿Estás seguro de que deseas activar este producto?') }}">
                                                 @csrf
                                                 @method('PATCH')
 

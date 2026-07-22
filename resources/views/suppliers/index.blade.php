@@ -117,7 +117,7 @@
 
                                             <!-- BOTÓN CONMUTADOR DE ESTADO (Reemplaza a Delete) -->
                                             <form action="{{ route('proveedores.toggleStatus', $supplier) }}" method="POST"
-                                                  onsubmit="return confirm('¿Deseas cambiar el estado operacional de este proveedor?');">
+                                                  data-confirm="{{ $supplier->status ? __('¿Estás seguro de que deseas inactivar este proveedor?') : __('¿Estás seguro de que deseas activar este proveedor?') }}">
                                                 @csrf
                                                 @method('PATCH')
                                                 

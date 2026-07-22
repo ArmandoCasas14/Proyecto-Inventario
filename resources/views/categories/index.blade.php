@@ -94,7 +94,7 @@
                                                 </svg>
                                             </a>
                                             <form action="{{ route('categorias.toggleStatus', $category) }}" method="POST"
-                                                  onsubmit="return confirm('¿Deseas cambiar el estado de esta categoría?');">
+                                                 data-confirm="{{ $category->status ? __('¿Estás seguro de que deseas inactivar esta categoría?') : __('¿Estás seguro de que deseas activar esta categoría?') }}">
                                                 @csrf
                                                 @method('PATCH')
 
