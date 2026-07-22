@@ -18,6 +18,11 @@
                     {{ session('success') }}
                 </div>
             @endif
+            @if(session('error'))
+                <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <span class="block sm:inline">{{ session('error') }}</span>
+                </div>
+            @endif
 
             <!-- Filtros -->
             <div class="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
@@ -77,7 +82,44 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-right">
-                                    <a href="{{ route('usuarios.edit', $user->id) }}" class="text-indigo-600 hover:text-indigo-900 font-semibold">Editar</a>
+                                    @if(auth()->user()->role->name === 'Administrador')
+                                        <div class="flex items-center justify-end gap-2">
+                                            
+                                            <!-- EDITAR (Mantiene tu diseño original) -->
+                                            <a href="{{ route('usuarios.edit', $user) }}"
+                                               title="{{ __('Editar') }}"
+                                               class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-500 hover:text-white dark:bg-amber-900/40 dark:text-amber-300 dark:hover:bg-amber-600 dark:hover:text-white transition ease-in-out duration-150 shadow-sm">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                </svg>
+                                            </a>
+
+                                            <!-- BOTÓN CONMUTADOR DE ESTADO (Reemplaza a Delete) -->
+                                            <form action="{{ route('usuarios.toggleStatus', $user) }}" method="POST"
+                                                  data-confirm="{{ $user->status ? __('¿Estás seguro de que deseas inactivar este usuario?') : __('¿Estás seguro de que deseas activar este usuario?') }}">
+                                                @csrf
+                                                @method('PATCH')
+                                                
+                                                @if($user->status)
+                                                    <!-- BOTÓN PARA INACTIVAR (- Rojo) -->
+                                                    <button type="submit" title="{{ __('Inactivar Usuario') }}"
+                                                            class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-red-100 text-red-700 hover:bg-red-500 hover:text-white dark:bg-red-900/40 dark:text-red-300 dark:hover:bg-red-600 dark:hover:text-white transition ease-in-out duration-150 shadow-sm">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" />
+                                                        </svg>
+                                                    </button>
+                                                @else
+                                                    <!-- BOTÓN PARA ACTIVAR (+ Verde) -->
+                                                    <button type="submit" title="{{ __('Activar Usuario') }}"
+                                                            class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-green-100 text-green-700 hover:bg-green-500 hover:text-white dark:bg-green-900/40 dark:text-green-300 dark:hover:bg-green-600 dark:hover:text-white transition ease-in-out duration-150 shadow-sm">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                                                        </svg>
+                                                    </button>
+                                                @endif
+                                            </form>
+                                        </div>
+                                        @endif
                                 </td>
                             </tr>
                             @empty

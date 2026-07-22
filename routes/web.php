@@ -23,11 +23,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-        Route::middleware(['role:Administrador,Encargado de inventario'])->group(function () {
-            Route::post('/notifications/mark-as-read', function () {
+    Route::post('/notifications/mark-as-read', function () {
                 auth()->user()->unreadNotifications->markAsRead();
                 return back();
-                })->middleware('auth')->name('notifications.markAsRead');
+                })->name('notifications.markAsRead');
+        Route::middleware(['role:Administrador,Encargado de inventario'])->group(function () {
             Route::resource('categories', CategoryController::class)->names('categorias');
             Route::resource('suppliers', SupplierController::class)->names('proveedores');
             Route::get('products/export-pdf', [ProductController::class, 'exportPdf'])->name('productos.export-pdf');
@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
             Route::patch('products/{product}/toggle', [ProductController::class, 'toggleStatus'])->name('productos.toggleStatus');
                 Route::middleware(['role:Administrador'])->group(function () {
                     Route::resource('users', UserController::class)->names('usuarios');
+                    Route::patch('users/{user}/toggle', [UserController::class, 'toggleStatus'])->name('usuarios.toggleStatus');
                 });
         });
 });
