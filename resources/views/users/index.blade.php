@@ -41,8 +41,10 @@
                                 Buscar
                             </button>
                             @if(request()->anyFilled(['search', 'role_id']))
-                                <a href="{{ route('usuarios.index') }}" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold text-xs uppercase rounded-md hover:bg-gray-300 transition">
-                                    Limpiar
+                                <a href="{{ route('usuarios.index') }}" title="Limpiar filtros" class="h-[38px] px-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold text-xs uppercase rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition flex items-center justify-center">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
                                 </a>
                             @endif
                         </div>
