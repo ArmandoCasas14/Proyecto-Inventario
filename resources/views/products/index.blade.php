@@ -18,20 +18,19 @@
 
                 <!-- Botones de Acción Global -->
                 <div class="flex items-center gap-3">
+                    <a href="{{ route('productos.create') }}"
+                       class="inline-flex items-center px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-semibold text-xs rounded-xl transition-all shadow-sm gap-2 focus:outline-none">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                         Crear Nuevo Producto
+                    </a>
                     <a href="{{ route('productos.export-pdf', request()->query()) }}" 
                        class="inline-flex items-center px-4 py-2.5 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white font-semibold text-xs rounded-xl transition-all shadow-sm gap-2 focus:outline-none">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
                         Exportar PDF
-                    </a>
-
-                    <a href="{{ route('productos.create') }}"
-                       class="inline-flex items-center px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-semibold text-xs rounded-xl transition-all shadow-sm gap-2 focus:outline-none">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                        </svg>
-                        + Crear Nuevo Producto
                     </a>
                 </div>
             </div>
@@ -62,14 +61,13 @@
                     </div>
                 @endif
 
-                <!-- FILTROS Y BÚSQUEDA INTEGRADOS -->
-                <div class="bg-slate-50/70 dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700/60">
-                    <form action="{{ route('productos.index') }}" method="GET" class="space-y-4">
-                        
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+                <!-- FILTROS Y BÚSQUEDA ALINEADOS (ESTILO MOVIMIENTOS) -->
+                <div class="bg-slate-50/70 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700/60">
+                    <form action="{{ route('productos.index') }}" method="GET">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
                             
                             <!-- Búsqueda -->
-                            <div>
+                            <div class="md:col-span-3">
                                 <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                                     Buscar Producto
                                 </label>
@@ -79,7 +77,7 @@
                             </div>
 
                             <!-- Categoría -->
-                            <div>
+                            <div class="md:col-span-3">
                                 <label for="category_id" class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                                     Categoría
                                 </label>
@@ -95,7 +93,7 @@
                             </div>
 
                             <!-- Estado -->
-                            <div>
+                            <div class="md:col-span-2">
                                 <label for="status" class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                                     Estado
                                 </label>
@@ -108,7 +106,7 @@
                             </div>
 
                             <!-- Existencias -->
-                            <div>
+                            <div class="md:col-span-2">
                                 <label for="stock" class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                                     Existencias
                                 </label>
@@ -120,22 +118,24 @@
                                 </select>
                             </div>
 
-                        </div>
+                            <!-- Botones Buscar / Limpiar (X) -->
+                            <div class="md:col-span-2 flex items-center gap-2">
+                                <button type="submit" 
+                                        class="w-full h-[38px] bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm flex items-center justify-center">
+                                    BUSCAR
+                                </button>
 
-                        <!-- Botones Buscar / Limpiar -->
-                        <div class="flex justify-end gap-2 pt-2 border-t border-slate-200/50 dark:border-slate-700/50">
-                            @if(request()->anyFilled(['search', 'category_id', 'status', 'stock']))
-                                <a href="{{ route('productos.index') }}" 
-                                   class="px-5 py-2.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors text-center">
-                                    Limpiar
-                                </a>
-                            @endif
-                            <button type="submit" 
-                                    class="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm">
-                                BUSCAR
-                            </button>
-                        </div>
+                                @if(request()->anyFilled(['search', 'category_id', 'status', 'stock']))
+                                    <a href="{{ route('productos.index') }}" title="Limpiar filtros"
+                                       class="h-[38px] px-3 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs uppercase rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors flex items-center justify-center shrink-0">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </a>
+                                @endif
+                            </div>
 
+                        </div>
                     </form>
                 </div>
 
