@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Reporte de Productos</title>
+    <title>Reporte de Movimientos de Inventario</title>
     <style>
         @page {
             margin: 0cm 0cm;
@@ -19,7 +19,7 @@
         /* BANNER ENCABEZADO */
         .header-banner {
             background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
-            background-color: #1e1b4b; /* Fallback DomPDF */
+            background-color: #1e1b4b; /* Fallback para DomPDF */
             color: #ffffff;
             padding: 20px;
             border-radius: 8px;
@@ -41,7 +41,7 @@
             font-weight: 500;
         }
 
-        /* METADATOS Y RESUMEN */
+        /* METADATOS Y FILTROS */
         .info-container {
             width: 100%;
             margin-bottom: 20px;
@@ -116,12 +116,12 @@
             border-bottom: none;
         }
 
-        /* ALINEACIONES Y MONOESPACIADOS */
+        /* ALINEACIÓN Y FORMATOS */
         .text-right { text-align: right; }
         .text-center { text-align: center; }
         .font-mono { font-family: monospace; font-size: 11px; }
 
-        /* BADGES / ETIQUETAS DE ESTADO */
+        /* BADGES / ETIQUETAS */
         .badge {
             display: inline-block;
             padding: 3px 8px;
@@ -132,8 +132,11 @@
             letter-spacing: 0.4px;
         }
 
-        .badge-active { background-color: #dcfce7; color: #15803d; }   /* Verde */
-        .badge-inactive { background-color: #ffe4e6; color: #be123c; } /* Rojo */
+        .badge-compra { background-color: #dcfce7; color: #15803d; }     /* Verde */
+        .badge-venta { background-color: #e0e7ff; color: #4338ca; }      /* Azul */
+        .badge-desecho { background-color: #ffe4e6; color: #be123c; }    /* Rojo */
+        .badge-devolucion { background-color: #fef3c7; color: #b45309; } /* Naranja */
+        .badge-default { background-color: #f1f5f9; color: #475569; }    /* Gris */
 
         /* FOOTER */
         .footer {
@@ -153,30 +156,36 @@
         <table style="width: 100%; border-collapse: collapse;">
             <tr>
                 <td style="border: none; padding: 0;">
-                    <h1>Reporte de Productos</h1>
-                    <p>Carnes Frías Alberth — Catálogo e Inventario General</p>
+                    <h1>Reporte de Movimientos</h1>
+                    <p>Carnes Frías Alberth — Control de Inventarios</p>
                 </td>
                 <td style="border: none; padding: 0; text-align: right; vertical-align: middle;">
                     <span style="background-color: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: bold;">
-                        {{ count($products) }} Productos
+                        {{ count($movements) }} Registros
                     </span>
                 </td>
             </tr>
         </table>
     </div>
 
-    <!-- TARJETA DE INFORMACIÓN / METADATOS -->
+    <!-- TARJETA DE INFORMACIÓN / FILTROS -->
     <div class="info-container">
         <div class="info-card">
             <table>
                 <tr>
-                    <td style="width: 50%;">
-                        <span class="label">Documento</span><br>
-                        <span class="value">Listado General de Productos</span>
+                    <td style="width: 33%;">
+                        <span class="label">Filtro de Tipo</span><br>
+                        <span class="value">{{ strtoupper($typeName) }}</span>
                     </td>
-                    <td style="width: 50%; text-align: right;">
+                    <td style="width: 33%;">
+                        <span class="label">Rango de Fechas</span><br>
+                        <span class="value">
+                            {{ \Carbon\Carbon::parse($dateFrom)->format('d/m/Y') }} — {{ \Carbon\Carbon::parse($dateTo)->format('d/m/Y') }}
+                        </span>
+                    </td>
+                    <td style="width: 33%; text-align: right;">
                         <span class="label">Fecha de Emisión</span><br>
-                        <span class="value">{{ now()->format('d/m/Y h:i A') }}</span>
+                        <span class="value">{{ date('d/m/Y h:i A') }}</span>
                     </td>
                 </tr>
             </table>
@@ -187,44 +196,48 @@
     <table class="data-table">
         <thead>
             <tr>
+                <th style="width: 15%;">Fecha / Hora</th>
+                <th style="width: 15%;">Tipo</th>
                 <th style="width: 12%;">Código</th>
-                <th style="width: 28%;">Producto</th>
-                <th style="width: 18%;">Categoría</th>
-                <th style="width: 18%;">Proveedor</th>
-                <th style="width: 12%; text-align: right;">Precio Venta</th>
-                <th style="width: 6%; text-align: center;">Stock</th>
-                <th style="width: 6%; text-align: center;">Estado</th>
+                <th style="width: 30%;">Producto</th>
+                <th style="width: 10%; text-align: right;">Cantidad</th>
+                <th style="width: 18%;">Responsable</th>
             </tr>
         </thead>
         <tbody>
-            @forelse($products as $product)
+            @forelse($movements as $movement)
+                @php
+                    // Asignación de estilos dinamicos para las etiquetas
+                    $typeNameLower = strtolower($movement->movementType->name ?? '');
+                    $badgeClass = 'badge-default';
+                    
+                    if (str_contains($typeNameLower, 'compra')) $badgeClass = 'badge-compra';
+                    elseif (str_contains($typeNameLower, 'venta')) $badgeClass = 'badge-venta';
+                    elseif (str_contains($typeNameLower, 'desecho')) $badgeClass = 'badge-desecho';
+                    elseif (str_contains($typeNameLower, 'devoluci')) $badgeClass = 'badge-devolucion';
+                @endphp
                 <tr>
+                    <td class="font-mono">{{ $movement->created_at->format('d/m/Y H:i') }}</td>
+                    <td>
+                        <span class="badge {{ $badgeClass }}">
+                            {{ $movement->movementType->name ?? 'N/A' }}
+                        </span>
+                    </td>
                     <td class="font-mono" style="font-weight: bold; color: #4f46e5;">
-                        {{ $product->code }}
+                        {{ $movement->product->code ?? 'N/A' }}
                     </td>
                     <td style="font-weight: 600;">
-                        {{ $product->name }}
+                        {{ $movement->product->name ?? 'Producto no disponible' }}
                     </td>
-                    <td>{{ $product->category->name ?? 'Sin Categoría' }}</td>
-                    <td>{{ $product->supplier->name ?? 'Sin Proveedor' }}</td>
-                    <td class="text-right font-mono" style="font-weight: bold;">
-                        ${{ number_format($product->selling_price, 2) }}
+                    <td class="text-right font-mono" style="font-weight: bold; font-size: 11px;">
+                        {{ number_format($movement->quantity) }}
                     </td>
-                    <td class="text-center font-mono" style="font-weight: bold;">
-                        {{ $product->current_stock }}
-                    </td>
-                    <td class="text-center">
-                        @if($product->status)
-                            <span class="badge badge-active">Activo</span>
-                        @else
-                            <span class="badge badge-inactive">Inactivo</span>
-                        @endif
-                    </td>
+                    <td>{{ $movement->user->name ?? 'Sistema' }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="text-center" style="padding: 30px; color: #94a3b8; font-style: italic;">
-                        No hay productos registrados o que coincidan con los filtros.
+                    <td colspan="6" class="text-center" style="padding: 30px; color: #94a3b8; font-style: italic;">
+                        No se encontraron movimientos registrados para este criterio de búsqueda.
                     </td>
                 </tr>
             @endforelse
@@ -233,7 +246,7 @@
 
     <!-- PIE DE PÁGINA -->
     <div class="footer">
-        Sistema de Gestión de Inventario — Carnes Frías Alberth — Reporte Generado Automáticamente
+        Documento generado automáticamente por el Sistema de Gestión Carnes Frías Alberth
     </div>
 
 </body>

@@ -8,6 +8,72 @@
                 + Registrar Entrada/Salida
             </a>
         </div>
+        <button type="button" 
+        x-data="" 
+        x-on:click.prevent="$dispatch('open-modal', 'modal-reporte-movimientos')"
+        class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 transition">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Exportar Reporte PDF
+        </button>
+
+<!-- Modal de Selección de Parámetros -->
+        <x-modal name="modal-reporte-movimientos" focusable>
+            <form action="{{ route('movimientos.export-pdf') }}" method="GET" class="p-6" target="_blank">
+                
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+                    Generar Reporte de Movimientos
+                </h2>
+
+                <div class="space-y-4">
+                    <!-- 1. Tipo de Movimiento -->
+                    <div>
+                        <label for="movement_type_id" class="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">
+                            Tipo de Movimiento
+                        </label>
+                        <select id="movement_type_id" 
+                                name="movement_type_id" 
+                                required 
+                                class="w-full text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-indigo-500">
+                            
+                            <option value="todos">Todos los movimientos</option>
+                            
+                            @foreach($movementTypes as $type)
+                                <option value="{{ $type->id }}">
+                                    {{ $type->name }}
+                                </option>
+                            @endforeach
+                            
+                        </select>
+                    </div>
+                    <!-- 2. Rango de Fechas -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="date_from" class="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">
+                                Desde
+                            </label>
+                            <input type="date" id="date_from" name="date_from" value="{{ date('Y-m-01') }}" required class="w-full text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm">
+                        </div>
+
+                        <div>
+                            <label for="date_to" class="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">
+                                Hasta
+                            </label>
+                            <input type="date" id="date_to" name="date_to" value="{{ date('Y-m-d') }}" required class="w-full text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end gap-3">
+                    <x-secondary-button x-on:click="$dispatch('close')">
+                        Cancelar
+                    </x-secondary-button>
+
+                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition">
+                        Descargar PDF
+                    </button>
+                </div>
+            </form>
+        </x-modal>
     </x-slot>
 
     <div class="py-12">

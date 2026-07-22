@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
             Route::resource('categories', CategoryController::class)->names('categorias');
             Route::resource('suppliers', SupplierController::class)->names('proveedores');
             Route::get('products/export-pdf', [ProductController::class, 'exportPdf'])->name('productos.export-pdf');
+            Route::get('movements/export-pdf', [MovementController::class, 'exportPdf'])->name('movimientos.export-pdf');
             Route::resource('products', ProductController::class)->names('productos');
             Route::resource('invoices', InvoiceController::class)->names('facturas');
             Route::resource('users', UserController::class)->names('usuarios');

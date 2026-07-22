@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\LowStockNotification;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class MovementController extends Controller
 {
@@ -28,6 +29,43 @@ class MovementController extends Controller
         $movementTypes = MovementType::all();
 
         return view('movements.index', compact('movements', 'movementTypes'));
+    }
+
+    public function exportPdf(Request $request)
+    {
+        // 1. Consulta base con relaciones
+        $query = Movement::with(['product', 'movementType', 'user']);
+
+        // 2. Filtrar por rango de fechas
+        $query->whereBetween('created_at', [
+            $request->date_from . ' 00:00:00',
+            $request->date_to . ' 23:59:59'
+        ]);
+
+        // 3. Determinar el nombre del filtro para mostrarlo en el PDF
+        $typeName = 'TODOS LOS MOVIMIENTOS';
+
+        if ($request->filled('movement_type_id') && $request->movement_type_id !== 'todos') {
+            $query->where('movement_type_id', $request->movement_type_id);
+            
+            // Obtenemos el nombre real del tipo desde la base de datos
+            $selectedType = MovementType::find($request->movement_type_id);
+            if ($selectedType) {
+                $typeName = $selectedType->name;
+            }
+        }
+
+        $movements = $query->orderBy('created_at', 'desc')->get();
+
+        // 4. Cargar la vista enviando la variable $typeName
+        $pdf = Pdf::loadView('pdf.movements', [
+            'movements' => $movements,
+            'typeName'  => $typeName,
+            'dateFrom'  => $request->date_from,
+            'dateTo'    => $request->date_to,
+        ]);
+
+        return $pdf->stream('reporte_movimientos_' . now()->format('Ymd_His') . '.pdf');
     }
 
     public function create()
