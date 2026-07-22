@@ -22,10 +22,10 @@
                         <div>
                             <label for="product_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Seleccionar Producto</label>
                             <select name="product_id" id="product_id" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm" required>
-                                <option value="">-- Seleccione un producto --</option>
+                                <option value="">Seleccione un producto</option>
                                 @foreach($products as $product)
                                     <option value="{{ $product->id }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>
-                                        {{ $product->name }} (Stock actual: {{ $product->current_stock }})
+                                        {{ $product->name }} - Stock: {{ $product->current_stock }}
                                     </option>
                                 @endforeach
                             </select>
@@ -37,7 +37,7 @@
                             <div>
                                 <label for="movement_type_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo de Movimiento</label>
                                 <select name="movement_type_id" id="movement_type_id" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm" required>
-                                    <option value="">-- Seleccione el motivo --</option>
+                                    <option value="">Seleccione el motivo</option>
                                     @foreach($movementTypes as $type)
                                         <option value="{{ $type->id }}" {{ old('movement_type_id') == $type->id ? 'selected' : '' }}>
                                             {{ $type->name }} ({{ strtoupper($type->type) }})

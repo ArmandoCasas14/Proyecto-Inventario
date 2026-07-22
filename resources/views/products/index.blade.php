@@ -46,7 +46,7 @@
                 <!-- ====================================================
                     COLUMNA IZQUIERDA: PANEL LATERAL DE FILTROS (1 de 4)
                 ===================================================== -->
-                <div class="lg:col-span-1 space-y-6">
+                <div class="lg:col-span-1 space-y-6 ">
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6 border border-gray-100 dark:border-gray-700">
                         <div class="flex justify-between items-center mb-4 pb-2 border-b dark:border-gray-700">
                             <h3 class="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Filtros</h3>
@@ -57,7 +57,7 @@
                             @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
                             
                             <!-- Filtro por Categorías -->
-                            <div>
+                            <div class="w-full sm:w-50">
                                 <label for="category_id" class="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-2">
                                     Categorías
                                 </label>
@@ -78,6 +78,14 @@
                                         </option>
                                     @endforeach
                                     
+                                </select>
+                            </div>
+                             <div class="w-full sm:w-50">
+                                <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">Estado</label>
+                                <select name="status" class="w-full text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm">
+                                    <option value="">Todos los estados</option>
+                                    <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Activos</option>
+                                    <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Inactivos</option>
                                 </select>
                             </div>
 
@@ -101,7 +109,7 @@
                             </div>
 
                             <!-- Botón de Envío de Filtros -->
-                            <div class="pt-2">
+                            <div class="pt-2 sm:w-48" >
                                 <button type="submit" class="w-full inline-flex justify-center items-center px-4 py-2.5 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none transition ease-in-out duration-150 shadow-sm cursor-pointer">
                                     Aplicar Filtro
                                 </button>
@@ -125,14 +133,6 @@
                             <div class="flex-1 w-full">
                                 <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">Buscar Producto</label>
                                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Nombre o código..." class="w-full text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm">
-                            </div>
-                            <div class="w-full sm:w-48">
-                                <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">Filtrar por Estado</label>
-                                <select name="status" class="w-full text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm">
-                                    <option value="">Todos</option>
-                                    <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Activos</option>
-                                    <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Inactivos</option>
-                                </select>
                             </div>
                             
                             <div class="flex gap-2 w-full sm:w-auto">
@@ -216,7 +216,7 @@
                                                     </a>
                                                     @if(auth()->user()->role->name === 'Administrador')
                                                     <form action="{{ route('productos.toggleStatus', $product) }}" method="POST"
-                                                  onsubmit="return confirm('¿Deseas cambiar el estado de este producto?');">
+                                                  class="form-toggle-status inline">
                                                 @csrf
                                                 @method('PATCH')
 

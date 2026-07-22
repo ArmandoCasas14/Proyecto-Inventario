@@ -42,19 +42,19 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                         <!-- Entrada por Código Único -->
                         <div>
-                            <label for="product_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Código Único (Ej: prod-431)</label>
+                            <label for="product_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Código Único</label>
                             <input type="text" id="product_code" placeholder="Escriba el código y presione Enter" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm font-mono text-indigo-600 dark:text-indigo-400">
                         </div>
 
                         <!-- Entrada por Buscador de Nombre -->
                         <div>
-                            <label for="product_selector" class="block text-sm font-medium text-gray-700 dark:text-gray-300">O buscar por Nombre</label>
+                            <label for="product_selector" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Buscar por Nombre</label>
                             <select id="product_selector" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm">
-                                <option value="">-- Seleccione un producto --</option>
+                                <option value="">Seleccione un producto</option>
                                 @foreach($products as $product)
                                     <!-- Guardamos el código único en data-code -->
                                     <option value="{{ $product->id }}" data-code="{{ $product->code }}" data-name="{{ $product->name }}" data-price="{{ $product->selling_price }}" data-stock="{{ $product->current_stock }}">
-                                        {{ $product->name }} (Ref: {{ $product->code }})
+                                        {{ $product->code }} - {{ $product->name }} - Stock: {{ $product->current_stock }}
                                     </option>
                                 @endforeach
                             </select>
@@ -147,7 +147,13 @@
 
             function processSelection() {
                 const codeValue = inputCode.value.trim().toLowerCase();
-                if (!codeValue) return alert('Ingrese un código único o busque por nombre.');
+                if (!codeValue) return Swal.fire({
+                                        icon: 'warning',
+                                        title: '¡Atención!',
+                                        text: 'Debe ingresar un código de producto o seleccionar uno del buscador.',
+                                        confirmButtonColor: '#4f46e5', // Color índigo para combinar con tu tema
+                                        confirmButtonText: 'Entendido'
+                                    });;
 
                 // Buscar las propiedades del producto dentro del select de datos
                 let optionFound = null;
@@ -160,7 +166,13 @@
                 }
 
                 if (!optionFound) {
-                    return alert('El código de producto no existe o está inactivo.');
+                    return Swal.fire({
+                        icon: 'warning',
+                        title: '¡Atención!',
+                        text: 'El código de producto no existe o está inactivo.',
+                        confirmButtonColor: '#4f46e5',
+                        confirmButtonText: 'Entendido'
+                    });
                 }
 
                 const productId = optionFound.value;
@@ -176,8 +188,13 @@
                     const qtyInput = row.querySelector('.qty-input');
                     let currentQty = parseInt(qtyInput.value) || 0;
                     if (currentQty >= maxStock) {
-                        alert(`No puedes agregar más. El stock máximo en bodega es: ${maxStock}`);
-                        return;
+                        return Swal.fire({
+                            icon: 'warning',
+                            title: '¡Atención!',
+                            text: `No puedes agregar más. El stock máximo en bodega es: ${maxStock}`,
+                            confirmButtonColor: '#4f46e5',
+                            confirmButtonText: 'Entendido'
+                        });
                     }
                     qtyInput.value = currentQty + 1;
                     qtyInput.dispatchEvent(new Event('input')); // Disparar recálculo
@@ -216,9 +233,13 @@
                 tr.querySelector('.qty-input').addEventListener('input', function() {
                     let qty = parseInt(this.value) || 0;
                     if(qty > maxStock) {
-                        alert(`Excede las existencias. Máximo disponible: ${maxStock}`);
-                        this.value = maxStock;
-                        qty = maxStock;
+                        return Swal.fire({
+                            icon: 'warning',
+                            title: '¡Atención!',
+                            text: `Excede las existencias del producto: ${name}. Máximo disponible: ${maxStock}`,
+                            confirmButtonColor: '#4f46e5',
+                            confirmButtonText: 'Entendido'
+                        });
                     }
                     const subtotal = qty * price;
                     tr.querySelector('.row-subtotal').innerText = `$${subtotal.toFixed(2)}`;

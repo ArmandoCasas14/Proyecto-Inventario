@@ -36,6 +36,7 @@ class InvoiceController extends Controller
         // Solo cargamos productos activos que tengan existencias
         $products = Product::where('status', 1)
                             ->where('current_stock', '>', 0)
+                            ->orderBy('name', 'asc')
                             ->get();
 
         return view('invoices.create', compact('products'));

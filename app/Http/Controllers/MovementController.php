@@ -32,7 +32,9 @@ class MovementController extends Controller
 
     public function create()
     {
-        $products = Product::where('status', 1)->get();
+        $products = Product::where('status', 1)
+                            ->orderBy('name', 'asc')
+                            ->get();
         // Excluimos 'Venta' del registro manual para que bodega no altere facturaciones sin control
         $movementTypes = MovementType::where('name', '!=', 'Venta')->get();
         
