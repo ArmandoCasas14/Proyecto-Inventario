@@ -22,6 +22,27 @@ class UserController extends Controller
         return view('users.index', compact('users', 'roles'));
     }
 
+    public function toggleStatus(User $user)
+    {
+        // 1. Evitamos que el usuario autenticado se desactive a sí mismo
+        if (auth()->id() === $user->id) {
+            return redirect()->route('usuarios.index')->with(
+                'error', 
+                'No puedes desactivar tu propia cuenta de usuario mientras estás en sesión.'
+            );
+        }
+
+        // 2. Conmutamos el estado (si está activo pasa a inactivo y viceversa)
+        $user->status = $user->status ? 0 : 1;
+        $user->save();
+
+        $mensaje = $user->status 
+            ? "El usuario '{$user->name}' ha sido activado correctamente." 
+            : "El usuario '{$user->name}' ha sido desactivado correctamente.";
+
+        return redirect()->route('usuarios.index')->with('success', $mensaje);
+    }
+
     public function edit(User $user)
     {
         $roles = Role::all();
