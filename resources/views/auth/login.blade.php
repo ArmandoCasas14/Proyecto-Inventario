@@ -16,7 +16,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold tracking-wide text-gray-900 uppercase">StockControl</h1>
+                    <h1 class="text-xl font-bold tracking-wide text-gray-900 uppercase">StockMaster</h1>
                     <p class="text-xs text-emerald-700 font-semibold">Sistema de Gestión e Inventarios</p>
                 </div>
             </div>
@@ -138,14 +138,6 @@
                         <x-input-error :messages="$errors->get('password')" class="mt-1.5" />
                     </div>
 
-                    <!-- Recordarme -->
-                    <div class="flex items-center justify-between py-1">
-                        <label for="remember_me" class="inline-flex items-center cursor-pointer">
-                            <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-emerald-600 shadow-sm focus:ring-emerald-600/20" name="remember">
-                            <span class="ms-2 text-sm text-gray-600">{{ __('Recordar sesión') }}</span>
-                        </label>
-                    </div>
-
                     <!-- Botón Ingresar (Sólido sin gradiente) -->
                     <button type="submit" 
                         class="w-full inline-flex justify-center items-center gap-2 px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-xl transition duration-150 shadow-md shadow-emerald-600/20 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2">
@@ -153,16 +145,6 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </button>
                 </form>
-
-                <!-- Footer de registro -->
-                @if (Route::has('register'))
-                    <p class="text-center text-xs text-gray-500 mt-6">
-                        {{ __('¿No tienes una cuenta?') }} 
-                        <a href="{{ route('register') }}" class="text-emerald-700 hover:underline font-bold">
-                            {{ __('Regístrate aquí') }}
-                        </a>
-                    </p>
-                @endif
 
             </div>
         </div>

@@ -12,7 +12,7 @@
                 </svg>
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-wide text-gray-900 uppercase">StockControl</h1>
+                <h1 class="text-xl font-bold tracking-wide text-gray-900 uppercase">StockMaster</h1>
                 <p class="text-xs text-emerald-700 font-semibold">Sistema de Gestión e Inventarios</p>
             </div>
         </div>
@@ -112,7 +112,7 @@
 
         <!-- Footer Copyright -->
         <p class="mt-8 text-xs text-gray-500 relative z-10 text-center">
-            &copy; {{ date('Y') }} StockControl System. Todos los derechos reservados.
+            &copy; {{ date('Y') }} StockMaster System. Todos los derechos reservados.
         </p>
 
     </div>
