@@ -71,6 +71,18 @@ class ProductController extends Controller
         return redirect()->route('productos.index')->with('success', $mensaje);
     }
 
+    public function show(Product $product)
+    {
+        // Cargamos la categoría, proveedor y los últimos 5 movimientos
+        $product->load([
+            'category',
+            'supplier',
+            'movements' => fn($query) => $query->latest()->take(5)
+        ]);
+
+        return view('products.show', compact('product'));
+    }
+
     public function create()
     {
         $categories = Category::all();
