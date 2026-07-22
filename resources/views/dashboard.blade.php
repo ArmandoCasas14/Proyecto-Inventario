@@ -212,18 +212,17 @@
                             @forelse($ultimasVentas as $factura)
                                 <tr class="hover:bg-emerald-50/30 transition">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-emerald-700">
-                                        {{ $factura->numero_factura ?? '#FAC-' . str_pad($factura->id, 4, '0', STR_PAD_LEFT) }}
+                                        {{ $factura->numero_factura ?? '#' . str_pad($factura->id, STR_PAD_LEFT) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-semibold text-slate-900">{{ $factura->cliente_nombre ?? 'Consumidor Final' }}</div>
-                                        <div class="text-xs text-slate-400">{{ $factura->cliente_documento ?? 'Sin Documento' }}</div>
+                                        <div class="text-sm font-semibold text-slate-900">{{ $factura->customer_name ?? 'Consumidor Final' }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
                                         {{ $factura->created_at->diffForHumans() }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100/80 text-emerald-800 uppercase">
-                                            {{ $factura->metodo_pago }}
+                                            {{ $factura->payment_type }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-bold text-slate-900">
