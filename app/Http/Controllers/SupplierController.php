@@ -68,7 +68,7 @@ class SupplierController extends Controller
     public function edit(Supplier $supplier)
     {
         if (auth()->user()->role->name !== 'Administrador') {
-        abort(403, 'No tienes permiso para editar categorías.');
+        abort(403, 'No tienes permiso para editar proveedores.');
     }
         return view('suppliers.edit', compact('supplier'));
     }
@@ -76,7 +76,7 @@ class SupplierController extends Controller
     public function update(Request $request, Supplier $supplier)
     {
         if (auth()->user()->role->name !== 'Administrador') {
-        abort(403, 'No tienes permiso para editar categorías.');
+        abort(403, 'No tienes permiso para editar proveedores.');
     }
         $request->validate([
             'legal_name' => 'required|string|max:255',

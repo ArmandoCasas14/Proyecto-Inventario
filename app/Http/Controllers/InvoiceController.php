@@ -9,6 +9,8 @@ use App\Models\Movement;
 use App\Models\MovementType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\LowStockNotification;
+use App\Models\User;
 
 class InvoiceController extends Controller
 {
@@ -99,22 +101,31 @@ class InvoiceController extends Controller
                         'unit_price' => $item['unit_price'],
                     ]);
 
-                    // B. Restar físicamente las existencias del Producto
                     $product->decrement('current_stock', $item['quantity']);
+                $product->refresh(); // Actualizamos la instancia en memoria con el nuevo stock
 
-                    // C. Crear registro automático en la tabla de Movimientos
-                    Movement::create([
-                        'product_id'       => $product->id,
-                        'movement_type_id' => $movementType->id,
-                        'user_id'          => auth()->id() ?? 1, // Usuario logueado o administrador por defecto (ID 1)
-                        'quantity'         => $item['quantity'],
-                        'unit_price'       => $item['unit_price'],
-                        'observation'      => "Salida automatizada por venta - Factura #{$invoice->id}",
-                    ]);
+                // C. 🚨 DISPARAR NOTIFICACIÓN DE STOCK CRÍTICO O AGOTADO 🚨
+                if ($product->current_stock <= $product->minimum_stock) {
+                    $users = User::all();
+
+                    foreach ($users as $user) {
+                        $user->notify(new LowStockNotification($product));
+                    }
                 }
 
-                return $invoice;
-            });
+                // D. Crear registro automático en la tabla de Movimientos
+                Movement::create([
+                    'product_id'       => $product->id,
+                    'movement_type_id' => $movementType->id,
+                    'user_id'          => auth()->id() ?? 1,
+                    'quantity'         => $item['quantity'],
+                    'unit_price'       => $item['unit_price'],
+                    'observation'      => "Salida automatizada por venta - Factura #{$invoice->id}",
+                ]);
+            }
+
+            return $invoice;
+         });
 
             return redirect()->route('facturas.show', $invoice->id)
                              ->with('success', 'Venta registrada e inventario actualizado exitosamente.');

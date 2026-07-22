@@ -7,6 +7,8 @@ use App\Models\MovementType;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\LowStockNotification;
+use App\Models\User;
 
 class MovementController extends Controller
 {
@@ -57,12 +59,39 @@ class MovementController extends Controller
                     if ($product->current_stock < $request->quantity) {
                         throw new \Exception("No puedes retirar más existencias de las disponibles. Stock actual: {$product->current_stock}.");
                     }
+                    
+                    // Disminuimos el stock
                     $product->decrement('current_stock', $request->quantity);
+                    
+                    // Refrescamos para obtener el valor actualizado en memoria
+                    $product->refresh();
+
+                    // 🚨 VERIFICACIÓN DE STOCK CRÍTICO O AGOTADO 🚨
+                    if ($product->current_stock <= $product->minimum_stock) {
+                        
+                        // Obtenemos a TODOS los usuarios del sistema
+                        $users = User::all();
+
+                        // Notificamos a cada uno de ellos
+                        foreach ($users as $user) {
+                            $user->notify(new LowStockNotification($product));
+                        }
+                    }
+
                 } else if ($type->type === 'suma') {
                     $product->increment('current_stock', $request->quantity);
+                    $product->refresh();
+
+    // Si el stock volvió a estar por encima del mínimo, borramos las notificaciones de este producto
+                    if ($product->current_stock > $product->minimum_stock) {
+                        DB::table('notifications')
+                            ->where('type', \App\Notifications\LowStockNotification::class)
+                            ->where('data->product_id', $product->id)
+                            ->delete(); // O ->update(['read_at' => now()]) si prefieres solo marcar como leída
+                    }
                 }
 
-                // Si no se define precio (ej: Desecho/Ajuste), usamos el precio de costo o venta actual del producto
+                // Si no se define precio, usamos el precio de venta del producto
                 $price = $request->unit_price ?? $product->selling_price;
 
                 Movement::create([
@@ -82,4 +111,5 @@ class MovementController extends Controller
             return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
     }
+    
 }
