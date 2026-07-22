@@ -8,7 +8,12 @@
 
             <!-- Botonera superior alineada -->
             <div class="flex items-center gap-3">
-                <!-- 1. Botón Exportar Reporte PDF (Modal Trigger) -->
+
+                <!-- 2. Botón Registrar Entrada/Salida -->
+                <a href="{{ route('movimientos.create') }}" 
+                   class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-950 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                    + Registrar Entrada/Salida
+                </a>
                 <button type="button" 
                         x-data="" 
                         x-on:click.prevent="$dispatch('open-modal', 'modal-reporte-movimientos')"
@@ -18,12 +23,6 @@
                     </svg>
                     Generar Reporte PDF
                 </button>
-
-                <!-- 2. Botón Registrar Entrada/Salida -->
-                <a href="{{ route('movimientos.create') }}" 
-                   class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-950 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
-                    + Registrar Entrada/Salida
-                </a>
             </div>
         </div>
 
