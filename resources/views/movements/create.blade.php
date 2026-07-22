@@ -65,7 +65,7 @@
                         <!-- Observaciones -->
                         <div>
                             <label for="observation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Justificación u Observación</label>
-                            <textarea name="observation" id="observation" rows="3" placeholder="Ej: Pérdida por daño de empaque, ingreso por compra a proveedor, etc." class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm" required>{{ old('observation') }}</textarea>
+                            <textarea name="observation" id="observation" rows="3" placeholder="Ej: Pérdida por daño de empaque, ingreso por compra a proveedor, etc." class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm">{{ old('observation') }}</textarea>
                             <x-input-error :messages="$errors->get('observation')" class="mt-2" />
                         </div>
 
