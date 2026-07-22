@@ -58,19 +58,27 @@
                             
                             <!-- Filtro por Categorías -->
                             <div>
-                                <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-2">Categorías</label>
-                                <div class="space-y-2 max-h-64 overflow-y-auto pr-2">
-                                    <label class="flex items-center text-sm cursor-pointer">
-                                        <input type="radio" name="category_id" value="" {{ !request('category_id') ? 'checked' : '' }} class="text-indigo-600 focus:ring-indigo-500 dark:bg-gray-900 dark:border-gray-700">
-                                        <span class="ms-2 text-gray-700 dark:text-gray-300 font-medium">Todas</span>
-                                    </label>
+                                <label for="category_id" class="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-2">
+                                    Categorías
+                                </label>
+                                
+                                <select id="category_id" 
+                                        name="category_id" 
+                                        class="w-full text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                                    
+                                    <!-- Opción por defecto (Todas) -->
+                                    <option value="" {{ !request('category_id') ? 'selected' : '' }}>
+                                        Todas las categorías
+                                    </option>
+
+                                    <!-- Listado dinámico desde Blade -->
                                     @foreach($categories as $category)
-                                        <label class="flex items-center text-sm cursor-pointer">
-                                            <input type="radio" name="category_id" value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'checked' : '' }} class="text-indigo-600 focus:ring-indigo-500 dark:bg-gray-900 dark:border-gray-700">
-                                            <span class="ms-2 text-gray-600 dark:text-gray-400">{{ $category->name }}</span>
-                                        </label>
+                                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
                                     @endforeach
-                                </div>
+                                    
+                                </select>
                             </div>
 
                             <!-- Filtro por Disponibilidad de Stock -->
