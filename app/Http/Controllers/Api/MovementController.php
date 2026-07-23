@@ -35,7 +35,7 @@ class MovementController extends Controller
             'product_id'       => 'required|exists:products,id',
             'movement_type_id' => 'required|exists:movement_types,id',
             'user_id'          => 'required|exists:users,id',
-            'quantity'         => 'required|integer',
+            'quantity'         => 'required|integer|min:1',
             'unit_price'       => 'required|numeric|min:0',
             'observation'      => 'nullable|string|max:255',
         ]);

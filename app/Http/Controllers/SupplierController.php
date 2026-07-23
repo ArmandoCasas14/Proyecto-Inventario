@@ -52,11 +52,11 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'legal_name' => 'required|string|max:255',
-            'nit'        => 'required|string|max:50|unique:suppliers,nit',
-            'phone'      => 'nullable|string|max:50',
-            'email'      => 'nullable|email|max:255',
-            'address'    => 'nullable|string|max:255',
+            'legal_name' => 'required|string|max:100',
+            'nit'        => 'required|string|max:10|unique:suppliers,nit',
+            'phone'      => 'nullable|string|max:20',
+            'email'      => 'nullable|email|max:45',
+            'address'    => 'nullable|string|max:100',
         ]);
 
         // Por defecto creamos el proveedor con estado activo (1)

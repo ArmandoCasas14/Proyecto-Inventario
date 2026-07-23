@@ -19,9 +19,19 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'name' => 'required|string|max:100',
+            'email' => 'required|string|email|max:45|unique:users',
+            'password' => [
+                'required',
+                'string',
+                'confirmed',
+                Password::min(8)
+                    ->letters()       // Exige al menos una letra
+                    ->mixedCase()     // Exige al menos una mayúscula y una minúscula
+                    ->numbers()       // Exige al menos un número
+                    ->symbols()       // Exige al menos un carácter especial (!@#$%^&*...)
+                    // ->uncompromised() // Opcional: verifica que la contraseña n o haya sido filtrada en hackeos de internet
+            ],
             'role_id' => 'required|exists:roles,id',
         ]);
 
@@ -96,7 +106,17 @@ class AuthController extends Controller
         $rules = [
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'sometimes|string|min:8',
+            'password' => [
+                'sometimes',
+                'required', // Se asegura de que si se envía, no venga vacía
+                'string',
+                'confirmed',
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+            ],
         ];
 
         // Solo el administrador puede modificar el rol

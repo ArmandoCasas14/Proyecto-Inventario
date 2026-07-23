@@ -56,8 +56,8 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $request->validate([
-            'name'      => 'required|string|max:255',
-            'email'     => 'required|email|unique:users,email,' . $user->id,
+            'name'      => 'required|string|max:100',
+            'email'     => 'required|email|max:45|unique:users,email,' . $user->id,
             'role_id'   => 'required|exists:roles,id',
             'status'    => 'required|boolean',
         ]);
@@ -70,10 +70,20 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
+            'name'     => 'required|string|max:100',
+            'email'    => 'required|email|max:45|unique:users,email',
             'role_id'  => 'required|exists:roles,id',
-            'password' => 'required|min:8',
+            'password' => [
+                'required',
+                'string',
+                'confirmed',
+                Password::min(8)
+                    ->letters()       // Exige al menos una letra
+                    ->mixedCase()     // Exige al menos una mayúscula y una minúscula
+                    ->numbers()       // Exige al menos un número
+                    ->symbols()       // Exige al menos un carácter especial (!@#$%^&*...)
+                    // ->uncompromised() // Opcional: verifica que la contraseña n o haya sido filtrada en hackeos de internet
+            ],
         ]);
 
         User::create([

@@ -86,7 +86,12 @@ class MovementController extends Controller
             'movement_type_id' => 'required|exists:movement_types,id',
             'quantity'         => 'required|integer|min:1',
             'unit_price'       => 'nullable|numeric|min:0',
+<<<<<<< HEAD
             'observation'      => 'nullable|string|max:500',
+=======
+            'observation'      => 'required|string|max:255',
+>>>>>>> 2d424eafb2ed6353bd64496670141208eca6de65
+
         ]);
 
         try {

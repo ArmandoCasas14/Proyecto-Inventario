@@ -46,8 +46,8 @@ class InvoiceController extends Controller
     {
         // Validamos la estructura del formulario básico
         $request->validate([
-            'customer_name' => 'required|string|max:255',
-            'payment_type'  => 'required|string', // Efectivo, Transferencia, etc.
+            'customer_name' => 'required|string|max:100',
+            'payment_type'  => 'required|string|max:50', // Efectivo, Transferencia, etc.
             'items'         => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity'   => 'required|integer|min:1',

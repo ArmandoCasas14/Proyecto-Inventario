@@ -33,7 +33,7 @@ class InvoiceItemController extends Controller
     {
         $validated = $request->validate([
             'invoice_id' => 'required|exists:invoices,id',
-            'product_id' => 'required|integer',
+            'product_id' => 'required|exists:products,id',
             'quantity'   => 'required|integer|min:1',
             'unit_price' => 'required|numeric|min:0'
         ]);
