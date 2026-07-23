@@ -124,6 +124,7 @@ class MovementController extends Controller
                     $product->refresh();
 
     // Si el stock volvió a estar por encima del mínimo, borramos las notificaciones de este producto
+                    $productId = $product->id;
                     if ($product->current_stock > $product->minimum_stock) {
                       DB::table('notifications')
                             ->where('type', \App\Notifications\LowStockNotification::class)
