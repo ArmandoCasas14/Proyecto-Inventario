@@ -127,7 +127,7 @@ class MovementController extends Controller
                     if ($product->current_stock > $product->minimum_stock) {
                        DB::table('notifications')
                             ->where('type', 'App\Notifications\LowStockNotification')
-                            ->where('data->product_id', $productId) // o 'data->product_id'
+                            ->where('data->product_id', $product->id) // o 'data->product_id'
                             ->delete();
                     }
                 }
