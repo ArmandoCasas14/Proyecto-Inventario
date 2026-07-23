@@ -87,6 +87,7 @@ class MovementController extends Controller
             'quantity'         => 'required|integer|min:1',
             'unit_price'       => 'nullable|numeric|min:0',
             'observation'      => 'required|string|max:255',
+
         ]);
 
         try {
