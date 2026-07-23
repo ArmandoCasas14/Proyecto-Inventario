@@ -77,7 +77,7 @@ class UserController extends Controller
             'password' => [
                 'required',
                 'string',
-                'confirmed',
+                //'confirmed',
                 Password::min(8)
                     ->letters()       // Exige al menos una letra
                     ->mixedCase()     // Exige al menos una mayúscula y una minúscula
