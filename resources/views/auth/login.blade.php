@@ -115,28 +115,45 @@
 
                     <!-- Contraseña -->
                     <div>
-                        <div class="flex items-center justify-between">
-                            <x-input-label for="password" :value="__('Contraseña')" class="text-gray-700 text-xs uppercase font-bold tracking-wider" />
-                            @if (Route::has('password.request'))
-                                <a class="text-xs text-emerald-700 hover:text-emerald-800 transition-colors font-semibold" href="{{ route('password.request') }}">
-                                    {{ __('¿Olvidaste tu contraseña?') }}
-                                </a>
-                            @endif
+                        <div x-data="{ showPassword: false }" class="mt-4">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="password" class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                {{ __('Contraseña') }}
+                            </label>
                         </div>
-                        <div class="relative mt-1.5">
-                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                            </div>
-                            <x-text-input id="password" 
-                                class="block w-full pl-10 pr-4 py-2.5 bg-gray-50 border-gray-300 text-gray-900 focus:bg-white focus:border-emerald-600 focus:ring-emerald-600/20 rounded-xl shadow-sm text-sm" 
-                                type="password" 
+
+                        <div class="relative">
+                            <!-- INPUT (CAMBIA DINÁMICAMENTE ENTRE 'PASSWORD' Y 'TEXT') -->
+                            <input :type="showPassword ? 'text' : 'password'" 
+                                id="password" 
                                 name="password" 
                                 required 
-                                autocomplete="current-password" 
-                                placeholder="••••••••" />
+                                autocomplete="current-password"
+                                placeholder="••••••••"
+                                class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5 pl-3.5 pr-10 shadow-sm transition-colors">
+
+                            <!-- BOTÓN CON ÍCONO DE OJO -->
+                            <button type="button" 
+                                    @click="showPassword = !showPassword" 
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors focus:outline-none"
+                                    tabindex="-1">
+                                
+                                <!-- ÍCONO OJO ABIERTO (MOSTRAR) -->
+                                <svg x-show="!showPassword" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+
+                                <!-- ÍCONO OJO TACHADO (OCULTAR) -->
+                                <svg x-show="showPassword" x-cloak class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908A8.982 8.982 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m-0.469 0.469L3 3l18 18" />
+                                </svg>
+                            </button>
                         </div>
-                        <x-input-error :messages="$errors->get('password')" class="mt-1.5" />
+
+                        <x-input-error :messages="$errors->get('password')" class="mt-1.5 text-xs text-rose-600 dark:text-rose-400" />
                     </div>
+                        
 
                     <!-- Botón Ingresar (Sólido sin gradiente) -->
                     <button type="submit" 
