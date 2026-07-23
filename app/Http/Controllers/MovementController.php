@@ -86,12 +86,7 @@ class MovementController extends Controller
             'movement_type_id' => 'required|exists:movement_types,id',
             'quantity'         => 'required|integer|min:1',
             'unit_price'       => 'nullable|numeric|min:0',
-<<<<<<< HEAD
-            'observation'      => 'nullable|string|max:500',
-=======
             'observation'      => 'required|string|max:255',
->>>>>>> 2d424eafb2ed6353bd64496670141208eca6de65
-
         ]);
 
         try {
@@ -129,10 +124,10 @@ class MovementController extends Controller
 
     // Si el stock volvió a estar por encima del mínimo, borramos las notificaciones de este producto
                     if ($product->current_stock > $product->minimum_stock) {
-                        DB::table('notifications')
-                            ->where('type', \App\Notifications\LowStockNotification::class)
-                            ->where('data->product_id', $product->id)
-                            ->delete(); // O ->update(['read_at' => now()]) si prefieres solo marcar como leída
+                       DB::table('notifications')
+                            ->where('type', 'App\Notifications\LowStockNotification')
+                            ->where('data->product_id', $productId) // o 'data->product_id'
+                            ->delete();
                     }
                 }
 
