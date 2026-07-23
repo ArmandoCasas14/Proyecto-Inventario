@@ -232,24 +232,24 @@
 
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-50 transition item-row';
-                tr.innerHTML = `
-                    <td class="px-4 py-3 font-mono text-xs font-bold text-slate-600">${code}</td>
-                    <td class="px-4 py-3">
-                        <span class="text-sm font-semibold text-slate-800">${name}</span>
-                        <input type="hidden" name="items[${itemIndex}][product_id]" value="${productId}">
-                    </td>
-                    <td class="px-4 py-3 text-center font-mono text-slate-600">$${price.toFixed(2)}</td>
-                    <td class="px-4 py-3 text-center">
-                        <input type="number" name="items[${itemIndex}][quantity]" value="1" min="1" max="${maxStock}" 
-                               class="qty-input block w-16 text-center rounded-lg border-slate-200 bg-white text-slate-800 font-bold focus:border-emerald-500 focus:ring-emerald-500 text-sm py-1 px-1 mx-auto transition" data-price="${price}">
-                    </td>
-                    <td class="px-4 py-3 text-right font-bold font-mono text-slate-900 row-subtotal">$${price.toFixed(2)}</td>
-                    <td class="px-4 py-3 text-center">
-                        <button type="button" class="text-rose-500 hover:text-rose-700 font-bold text-xs p-1 hover:bg-rose-50 rounded transition btn-remove">
-                            Quitar
-                        </button>
-                    </td>
-                `;
+                    tr.innerHTML = `
+                        <td class="px-4 py-3 font-mono text-xs font-bold text-slate-600">${code}</td>
+                        <td class="px-4 py-3">
+                            <span class="text-sm font-semibold text-slate-800">${name}</span>
+                            <input type="hidden" name="items[${itemIndex}][product_id]" value="${productId}">
+                        </td>
+                        <td class="px-4 py-3 text-center font-mono text-slate-600">$${price.toFixed(2)}</td>
+                        <td class="px-4 py-3 text-center">
+                            <input type="number" name="items[${itemIndex}][quantity]" value="1" min="1" max="${maxStock}" 
+                                class="qty-input block w-16 text-center rounded-lg border-slate-200 bg-white text-slate-800 font-bold focus:border-emerald-500 focus:ring-emerald-500 text-sm py-1 px-1 mx-auto transition" data-price="${price}">
+                        </td>
+                        <td class="px-4 py-3 text-right font-bold font-mono text-slate-900 row-subtotal">$${price.toFixed(2)}</td>
+                        <td class="px-4 py-3 text-center">
+                            <button type="button" class="text-rose-500 hover:text-rose-700 font-bold text-xs p-1 hover:bg-rose-50 rounded transition btn-remove">
+                                Quitar
+                            </button>
+                        </td>
+                    `;
 
                 detailWrapper.appendChild(tr);
                 itemIndex++;
