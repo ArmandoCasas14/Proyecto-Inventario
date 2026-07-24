@@ -70,6 +70,13 @@
                         </span>
                     </div>
                 </div>
+                <!-- 3.5. CAMPO DE OBSERVACIONES / NÚMERO DE TRANSFERENCIA (Solo si existe) -->
+                @if(!empty($invoice->observation))
+                    <div class="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1">Observaciones / Detalles</span>
+                        <p class="text-sm font-semibold text-slate-700 font-mono">{{ $invoice->observation }}</p>
+                    </div>
+                @endif
 
                 <!-- 4. TABLA DE ARTÍCULOS -->
                 <div class="overflow-x-auto rounded-2xl border border-slate-100">

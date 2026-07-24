@@ -48,6 +48,7 @@ class InvoiceController extends Controller
         $request->validate([
             'customer_name' => 'required|string|max:100',
             'payment_type'  => 'required|string|max:50', // Efectivo, Transferencia, etc.
+            'observations' => 'nullable|string|max:255',
             'items'         => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity'   => 'required|integer|min:1',
@@ -84,6 +85,7 @@ class InvoiceController extends Controller
                 $invoice = Invoice::create([
                     'customer_name' => $request->customer_name,
                     'payment_type'  => $request->payment_type,
+                    'observation' => $request->observations,
                     'total'         => $totalFactura,
                 ]);
 

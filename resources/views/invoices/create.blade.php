@@ -56,6 +56,13 @@
                     </div>
                 </div>
 
+                <div>
+                    <label for="observations" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Observaciones / Referencia</label>
+                    <input type="text" name="observations" id="observations" value="{{ old('observations') }}" 
+                        placeholder="Ej: Número de comprobante o notas adicionales..."
+                        class="block w-full rounded-xl border-slate-200 bg-slate-50/50 text-slate-800 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2.5 px-3.5 transition">
+                </div>      
+
                 <!-- 3. SECCIÓN: BÚSQUEDA DE PRODUCTOS (CAJA DESTACADA CON FONDO SUTIL) -->
                 <div class="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-5 md:p-6 space-y-4">
                     <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wide">Agregar Productos al Detalle</h2>
@@ -157,6 +164,8 @@
             const emptyRow = document.getElementById('empty-row');
             const grandTotalLabel = document.getElementById('grand-total');
             const subtotalLabel = document.getElementById('subtotal-label');
+            const paymentTypeSelect = document.getElementById('payment_type');
+            const observationsInput = document.getElementById('observations');  
             
             let itemIndex = 0;
 
@@ -166,6 +175,20 @@
                     inputCode.value = selectedOption.dataset.code;
                 }
             });
+            paymentTypeSelect.addEventListener('change', function() {
+                const selectedValue = this.value;
+
+                if (selectedValue === 'Efectivo') {
+                    observationsInput.value = ''; // No ponga nada por defecto
+                } else if (selectedValue === 'Transferencia') {
+                    observationsInput.value = 'Número de transferencia: ';
+                } else if (selectedValue === 'Tarjeta') {
+                    observationsInput.value = 'Número de pago: ';
+                }
+            
+            // Opcional: enfocar el input para que el usuario escriba de una vez el número si lo desea
+            // observationsInput.focus();
+             });
 
             inputCode.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
