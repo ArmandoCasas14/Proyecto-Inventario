@@ -85,7 +85,7 @@ class InvoiceController extends Controller
                 $invoice = Invoice::create([
                     'customer_name' => $request->customer_name,
                     'payment_type'  => $request->payment_type,
-                    'observation' => $request->observations,
+                    'observation' => $request->observations ?? 'Ninguna',
                     'total'         => $totalFactura,
                 ]);
 
