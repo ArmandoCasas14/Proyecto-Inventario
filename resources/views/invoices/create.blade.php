@@ -72,10 +72,10 @@
                         <div class="md:col-span-5">
                             <label for="product_selector" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Producto Disponible</label>
                             <select id="product_selector" class="block w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2 px-3 transition">
-                                <option value="">-- Seleccionar producto del catálogo --</option>
+                                <option value="">Seleccionar producto del catálogo</option>
                                 @foreach($products as $product)
-                                    <option value="{{ $product->id }}" data-code="{{ $product->code }}" data-name="{{ $product->name }}" data-price="{{ $product->selling_price }}" data-stock="{{ $product->current_stock }}">
-                                        [{{ $product->code }}] {{ $product->name }} - ${{ number_format($product->selling_price, 2) }} (Disponibles: {{ $product->current_stock }})
+                                    <option value=" {{ $product->id }}" data-code="{{ $product->code }}" data-price="{{ $product->selling_price }}" data-name="{{ $product->name }}" data-stock="{{ $product->current_stock }}">
+                                         {{ $product->name }} (Stock: {{ $product->current_stock }})
                                     </option>
                                 @endforeach
                             </select>
