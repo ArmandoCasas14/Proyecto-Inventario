@@ -10,7 +10,6 @@ use App\Http\Controllers\MovementController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OtpVerificationController;
-
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -22,6 +21,9 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['au
 Route::middleware('auth')->group(function () {
 
         Route::middleware(['role:Administrador,Encargado de inventario'])->group(function () {
+            
+            Route::get('/productos/plantilla-importacion', [ProductController::class, 'downloadTemplate'])->name('productos.plantilla');
+            Route::post('/productos/importar', [ProductController::class, 'import'])->name('productos.import');
             Route::post('/notifications/mark-as-read', function () {
                 auth()->user()->unreadNotifications->markAsRead();
                 return back();

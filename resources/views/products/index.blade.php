@@ -18,6 +18,64 @@
 
                 <!-- Botones de Acción Global -->
                 <div class="flex items-center gap-3">
+                    <!-- Botón para Abrir Modal -->
+                    <button onclick="document.getElementById('importModal').classList.remove('hidden')" 
+                            class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-xl shadow-sm transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                        </svg>
+                        <span>Importar Productos</span>
+                    </button>
+
+                    <!-- Ventana Modal de Importación -->
+                    <div id="importModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+                        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100 relative">
+                            
+                            <!-- Header Modal -->
+                            <div class="flex justify-between items-center mb-4 border-b pb-3">
+                                <h3 class="text-lg font-bold text-gray-900">Importar Productos desde CSV</h3>
+                                <button onclick="document.getElementById('importModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600 font-bold text-xl">&times;</button>
+                            </div>
+
+                            <p class="text-xs text-gray-500 mb-4">
+                                Descarga la plantilla base, completa los datos de tus productos e impórtalos masivamente.
+                            </p>
+
+                            <!-- Botón 1: Descargar Plantilla -->
+                            <div class="mb-6">
+                                <a href="{{ route('productos.plantilla') }}" 
+                                class="w-full inline-flex justify-center items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs uppercase tracking-wider rounded-xl transition border border-slate-300">
+                                    <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    1. Descargar Plantilla (.CSV)
+                                </a>
+                            </div>
+
+                            <!-- Formulario Botón 2: Subir Archivo -->
+                            <form action="{{ route('productos.import') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                                @csrf
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">2. Selecciona el archivo editado</label>
+                                    <input type="file" name="file" accept=".csv" required 
+                                        class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 border border-slate-200 rounded-xl cursor-pointer">
+                                </div>
+
+                                <div class="flex justify-end gap-3 pt-4 border-t">
+                                    <button type="button" 
+                                            onclick="document.getElementById('importModal').classList.add('hidden')"
+                                            class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-xl transition">
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" 
+                                            class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition">
+                                        Cargar e Importar
+                                    </button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
                     <a href="{{ route('productos.create') }}"
                        class="inline-flex items-center px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-semibold text-xs rounded-xl transition-all shadow-sm gap-2 focus:outline-none">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

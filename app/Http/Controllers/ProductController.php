@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\LowStockNotification;
+use Illuminate\Support\Facades\Response;
 
 class ProductController extends Controller
 {
@@ -46,6 +47,154 @@ class ProductController extends Controller
 
         // Descargar el PDF con un nombre personalizado
         return $pdf->download('listado-productos-' . date('Y-m-d') . '.pdf');
+    }
+
+// 1. Método para descargar la plantilla en formato CSV (abrible en Excel)
+    public function downloadTemplate()
+    {
+        $headers = [
+            'Content-Type' => 'text/csv; charset=utf-8',
+            'Content-Disposition' => 'attachment; filename=plantilla_importacion_productos.csv',
+        ];
+
+        $columns = ['code', 'name', 'description', 'category_name', 'supplier_nit', 'supplier_name', 'purchase_price', 'selling_price', 'current_stock', 'minimum_stock'];
+
+        $callback = function () use ($columns) {
+            $file = fopen('php://output', 'w');
+            fputs($file, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM UTF-8
+            fputcsv($file, $columns, ';');
+
+            fputcsv($file, [
+                'PROD001',
+                'Producto Ejemplo',
+                'Descripción breve',
+                'Abarrotes',
+                '900123456',
+                'Distribuidora Ejemplo SAS',
+                '1000',
+                '1500',
+                '20',
+                '5'
+            ], ';');
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+// 2. Método para procesar el archivo subido
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt|max:2048',
+        ]);
+
+        $file = $request->file('file');
+        $handle = fopen($file->getRealPath(), 'r');
+
+        fseek($handle, 0);
+        $bom = fread($handle, 3);
+        if ($bom !== "\xEF\xBB\xBF") {
+            rewind($handle);
+        }
+
+        $header = fgetcsv($handle, 1000, ';');
+        if (!$header || count($header) < 10) {
+            rewind($handle);
+            $header = fgetcsv($handle, 1000, ',');
+            $delimiter = ',';
+        } else {
+            $delimiter = ';';
+        }
+
+        $importedCount = 0;
+        $errors = [];
+
+        DB::beginTransaction();
+
+        try {
+            while (($row = fgetcsv($handle, 1000, $delimiter)) !== false) {
+                if (empty($row[0])) continue;
+
+                $code         = trim($row[0]);
+                $name         = trim($row[1]);
+                $description  = trim($row[2] ?? '');
+                $categoryName = trim($row[3] ?? 'General');
+                
+                // Nuevos campos separados de proveedor
+                $supplierNit  = trim($row[4] ?? '');
+                $supplierName = trim($row[5] ?? 'Proveedor Sin Nombre');
+                
+                $purchasePrice = $this->numericVal($row[6] ?? 0);
+                $sellingPrice  = $this->numericVal($row[7] ?? 0);
+                $currentStock  = (int)($row[8] ?? 0);
+                $minimumStock  = (int)($row[9] ?? 0);
+
+                if (Product::where('code', $code)->exists()) {
+                    $errors[] = "El código '{$code}' ya se encuentra registrado.";
+                    continue;
+                }
+
+                // 1. Categoria
+                $category = Category::firstOrCreate(
+                    ['name' => $categoryName],
+                    ['status' => 1]
+                );
+
+                // 2. Proveedor: Buscar por NIT o por Razón Social
+                $supplier = null;
+                if (!empty($supplierNit)) {
+                    $supplier = Supplier::where('nit', $supplierNit)->first();
+                }
+
+                if (!$supplier) {
+                    $supplier = Supplier::where('legal_name', $supplierName)->first();
+                }
+
+                // Si no existe, creamos el proveedor con legal_name y nit completos
+                if (!$supplier) {
+                    $supplier = Supplier::create([
+                        'legal_name' => mb_strimwidth($supplierName, 0, 100),
+                        'nit'        => !empty($supplierNit) ? mb_strimwidth($supplierNit, 0, 10) : 'NIT-' . rand(100, 999),
+                        'phone'      => 'N/A', 
+                        'address'    => 'N/A',
+                        'email'      => 'N/A', 
+                        'status'     => 1
+                    ]);
+                }
+
+                // 3. Crear Producto
+                Product::create([
+                    'code'           => $code,
+                    'name'           => $name,
+                    'description'    => $description,
+                    'category_id'    => $category->id,
+                    'supplier_id'    => $supplier->id,
+                    'purchase_price' => $purchasePrice,
+                    'selling_price'  => $sellingPrice,
+                    'current_stock'  => $currentStock,
+                    'minimum_stock'  => $minimumStock,
+                    'status'         => 1,
+                ]);
+
+                $importedCount++;
+            }
+
+            DB::commit();
+            fclose($handle);
+
+            if (count($errors) > 0 && $importedCount == 0) {
+                return redirect()->back()->with('error', 'No se pudo importar ningún producto: ' . implode(', ', $errors));
+            }
+
+            return redirect()->route('productos.index')->with('success', "Se importaron exitosamente {$importedCount} productos.");
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            fclose($handle);
+            return redirect()->back()->with('error', 'Error al procesar el archivo: ' . $e->getMessage());
+        }
     }
 
      public function toggleStatus(Product $product)
@@ -155,5 +304,9 @@ class ProductController extends Controller
     {
         $product->delete();
         return redirect()->route('productos.index')->with('success', 'Producto eliminado de los registros.');
+    }
+
+    function numericVal($value) {
+        return (float) str_replace(['$', ' ', '.'], ['', '', ''], str_replace(',', '.', $value));
     }
 }
