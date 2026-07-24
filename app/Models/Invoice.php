@@ -13,7 +13,8 @@ class Invoice extends Model
     protected $fillable = [
         'customer_name', 
         'total', 
-        'payment_type'
+        'payment_type',
+        'observation'
     ];
     public function items()
     {

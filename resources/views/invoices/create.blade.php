@@ -56,12 +56,12 @@
                     </div>
                 </div>
 
-                <div>
+                  <div>
                     <label for="observation" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Observaciones / Referencia</label>
                     <input type="text" name="observation" id="observation" value="{{ old('observation') }}" 
                         placeholder="Ej: Número de comprobante o notas adicionales..."
                         class="block w-full rounded-xl border-slate-200 bg-slate-50/50 text-slate-800 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2.5 px-3.5 transition">
-                </div>      
+                </div>    
 
                 <!-- 3. SECCIÓN: BÚSQUEDA DE PRODUCTOS (CAJA DESTACADA CON FONDO SUTIL) -->
                 <div class="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-5 md:p-6 space-y-4">
@@ -165,7 +165,7 @@
             const grandTotalLabel = document.getElementById('grand-total');
             const subtotalLabel = document.getElementById('subtotal-label');
             const paymentTypeSelect = document.getElementById('payment_type');
-            const observationInput = document.getElementById('observations');  
+            const observationInput = document.getElementById('observation');  
             
             let itemIndex = 0;
 
@@ -179,7 +179,7 @@
                 const selectedValue = this.value;
 
                 if (selectedValue === 'Efectivo') {
-                    observationInput.value = ''; // No ponga nada por defecto
+                    observationInput.value = 'Efectivo'; // No ponga nada por defecto
                 } else if (selectedValue === 'Transferencia') {
                     observationInput.value = 'Número de transferencia: ';
                 } else if (selectedValue === 'Tarjeta') {
