@@ -102,7 +102,9 @@
                                 <th class="px-6 py-3.5">{{ __('Dirección') }}</th>
                                 <th class="px-6 py-3.5">{{ __('Contacto') }}</th>
                                 <th class="px-6 py-3.5">{{ __('Estado') }}</th>
+                                 @if(auth()->user()->role->name === 'Administrador')
                                 <th class="px-6 py-3.5 text-right">{{ __('Acciones') }}</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-slate-700/50 text-xs bg-white dark:bg-slate-800">
