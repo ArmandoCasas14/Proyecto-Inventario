@@ -57,8 +57,8 @@
                 </div>
 
                 <div>
-                    <label for="observations" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Observaciones / Referencia</label>
-                    <input type="text" name="observations" id="observations" value="{{ old('observations') }}" 
+                    <label for="observation" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Observaciones / Referencia</label>
+                    <input type="text" name="observation" id="observation" value="{{ old('observation') }}" 
                         placeholder="Ej: Número de comprobante o notas adicionales..."
                         class="block w-full rounded-xl border-slate-200 bg-slate-50/50 text-slate-800 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2.5 px-3.5 transition">
                 </div>      
@@ -165,7 +165,7 @@
             const grandTotalLabel = document.getElementById('grand-total');
             const subtotalLabel = document.getElementById('subtotal-label');
             const paymentTypeSelect = document.getElementById('payment_type');
-            const observationsInput = document.getElementById('observations');  
+            const observationInput = document.getElementById('observations');  
             
             let itemIndex = 0;
 
@@ -179,11 +179,11 @@
                 const selectedValue = this.value;
 
                 if (selectedValue === 'Efectivo') {
-                    observationsInput.value = ''; // No ponga nada por defecto
+                    observationInput.value = ''; // No ponga nada por defecto
                 } else if (selectedValue === 'Transferencia') {
-                    observationsInput.value = 'Número de transferencia: ';
+                    observationInput.value = 'Número de transferencia: ';
                 } else if (selectedValue === 'Tarjeta') {
-                    observationsInput.value = 'Número de pago: ';
+                    observationInput.value = 'Número de pago: ';
                 }
             
             // Opcional: enfocar el input para que el usuario escriba de una vez el número si lo desea
