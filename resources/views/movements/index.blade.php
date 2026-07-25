@@ -250,4 +250,24 @@
 
         </div>
     </div>
+
+    <!-- SCRIPT DE APOYO PARA EL DATALIST -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('product_search_input');
+            const dataList = document.getElementById('products-list');
+
+            if (searchInput && dataList) {
+                searchInput.addEventListener('input', function() {
+                    const typedValue = this.value.trim().toLowerCase();
+                    for (let i = 0; i < dataList.options.length; i++) {
+                        const opt = dataList.options[i];
+                        if (opt.value.toLowerCase() === typedValue) {
+                            break;
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </x-app-layout>

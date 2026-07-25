@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Movement extends Model
 {
-    //
     use HasFactory;
+
     protected $fillable = [
         'product_id',
         'movement_type_id',
@@ -18,6 +18,7 @@ class Movement extends Model
         'unit_price',
         'observation',
     ];
+
     // Relación con el Producto
     public function product()
     {
@@ -36,9 +37,14 @@ class Movement extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Filtro por Nombre o Código del Producto (Muestra todo el historial)
+     */
     public function scopeOfProduct(Builder $query, ?string $term): Builder
     {
-        if (!$term) return $query;
+        if (!$term) {
+            return $query;
+        }
 
         return $query->whereHas('product', function ($q) use ($term) {
             $q->where('name', 'like', "%{$term}%")
@@ -47,11 +53,13 @@ class Movement extends Model
     }
 
     /**
-     * Filtro por Tipo de Operación de Movimiento (Suma / Resta) a través del ID del tipo
+     * Filtro por Tipo de Operación de Movimiento
      */
     public function scopeOfType(Builder $query, ?int $movementTypeId): Builder
     {
-        if (!$movementTypeId) return $query;
+        if (!$movementTypeId) {
+            return $query;
+        }
 
         return $query->where('movement_type_id', $movementTypeId);
     }
@@ -61,17 +69,21 @@ class Movement extends Model
      */
     public function scopeOfDate(Builder $query, ?string $date): Builder
     {
-        if (!$date) return $query;
+        if (!$date) {
+            return $query;
+        }
 
         return $query->whereDate('created_at', $date);
     }
 
     /**
-     * Filtro por Encargado / Usuario Responsable (Búsqueda por Nombre)
+     * Filtro por Encargado / Usuario Responsable
      */
     public function scopeOfUser(Builder $query, ?string $userName): Builder
     {
-        if (!$userName) return $query;
+        if (!$userName) {
+            return $query;
+        }
 
         return $query->whereHas('user', function ($q) use ($userName) {
             $q->where('name', 'like', "%{$userName}%");

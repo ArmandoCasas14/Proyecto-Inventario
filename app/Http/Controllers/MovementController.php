@@ -13,9 +13,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class MovementController extends Controller
 {
-    public function index(Request $request)
+   public function index(Request $request)
     {
-        // 1. Ejecutar la consulta aplicando consecutivamente los scopes individuales
+        // 1. Ejecutar la consulta aplicando los scopes
         $movements = Movement::with(['product', 'movementType', 'user'])
             ->ofProduct($request->input('product'))
             ->ofType($request->input('movement_type_id'))
@@ -25,16 +25,15 @@ class MovementController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        // 2. Obtener los tipos de movimiento para el select del filtro
+        // 2. Tipos de movimiento para select
         $movementTypes = MovementType::all();
-        $allProducts = Product::all();
 
-        // 3. Obtener todos los productos activos para alimentar el datalist del buscador
+        // 3. Productos activos para el datalist del buscador de la tabla
         $products = Product::where('status', 1)
             ->orderBy('name', 'asc')
             ->get();
 
-        return view('movements.index', compact('movements', 'movementTypes', 'products','allProducts'));
+        return view('movements.index', compact('movements', 'movementTypes', 'products'));
     }
 
     public function exportPdf(Request $request)
