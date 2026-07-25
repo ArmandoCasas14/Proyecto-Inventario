@@ -49,6 +49,7 @@ class Product extends Model
               ->orWhere('code', 'like', "%{$term}%"); // Asumiendo que usas 'code'
         });
     }
+    
 
     /**
      * Filtro por Categoría

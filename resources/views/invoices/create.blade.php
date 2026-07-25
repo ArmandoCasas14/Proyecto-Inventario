@@ -56,29 +56,41 @@
                     </div>
                 </div>
 
-                  <div>
+                <div>
                     <label for="observation" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Observaciones / Referencia</label>
                     <input type="text" name="observation" id="observation" value="{{ old('observation') }}" 
                         placeholder="Ej: Número de comprobante o notas adicionales..."
                         class="block w-full rounded-xl border-slate-200 bg-slate-50/50 text-slate-800 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2.5 px-3.5 transition">
                 </div>    
 
-                <!-- 3. SECCIÓN: BÚSQUEDA DE PRODUCTOS (CAJA DESTACADA CON FONDO SUTIL) -->
+                <!-- 3. SECCIÓN: BÚSQUEDA DE PRODUCTOS -->
                 <div class="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-5 md:p-6 space-y-4">
                     <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wide">Agregar Productos al Detalle</h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
                         <!-- Entrada por Código Único -->
-                        <div class="md:col-span-4">
+                        <div class="md:col-span-3">
                             <label for="product_code" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Código / Scanner</label>
                             <input type="text" id="product_code" placeholder="Escriba código + Enter" 
                                    class="block w-full rounded-xl border-slate-200 bg-white text-emerald-700 font-mono font-bold focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2 px-3 transition">
                         </div>
 
-                        <!-- Selector por Nombre -->
-                        <div class="md:col-span-5">
-                            <label for="product_selector" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Producto Disponible</label>
-                            <select id="product_selector" class="block w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2 px-3 transition">
+                        <!-- Buscador por Nombre con Datalist -->
+                        <div class="md:col-span-6">
+                            <label for="product_search_name" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Buscar por Nombre</label>
+                            <input type="text" id="product_search_name" list="products-list" placeholder="Escribe para buscar (ej: car)..." 
+                                class="block w-full rounded-xl border-slate-200 bg-white text-slate-800 focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2 px-3 transition">
+                            
+                            <datalist id="products-list">
+                                @foreach($products as $product)
+                                    <option value="{{ $product->name }}" data-code="{{ $product->code }}" data-id="{{ $product->id }}">
+                                        [{{ $product->code }}] - ${{ number_format($product->selling_price, 2) }} (Disponibles: {{ $product->current_stock }})
+                                    </option>
+                                @endforeach
+                            </datalist>
+
+                            <!-- Selector oculto original para mantener compatibilidad con la lógica interna -->
+                            <select id="product_selector" class="hidden">
                                 <option value="">-- Seleccionar producto del catálogo --</option>
                                 @foreach($products as $product)
                                     <option value="{{ $product->id }}" data-code="{{ $product->code }}" data-name="{{ $product->name }}" data-price="{{ $product->selling_price }}" data-stock="{{ $product->current_stock }}">
@@ -158,6 +170,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const inputCode = document.getElementById('product_code');
+            const inputSearchName = document.getElementById('product_search_name');
+            const dataList = document.getElementById('products-list');
             const selector = document.getElementById('product_selector');
             const btnAdd = document.getElementById('btn-add-product');
             const detailWrapper = document.getElementById('detail-wrapper');
@@ -169,28 +183,54 @@
             
             let itemIndex = 0;
 
+            // Detectar cuando el usuario selecciona o escribe un producto en el buscador por nombre
+            inputSearchName.addEventListener('input', function() {
+                const typedValue = this.value.trim().toLowerCase();
+                
+                for (let i = 0; i < dataList.options.length; i++) {
+                    const opt = dataList.options[i];
+                    if (opt.value.toLowerCase() === typedValue) {
+                        const code = opt.dataset.code;
+                        inputCode.value = code;
+                        
+                        for (let j = 0; j < selector.options.length; j++) {
+                            if (selector.options[j].dataset.code === code) {
+                                selector.selectedIndex = j;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            });
+
             selector.addEventListener('change', function() {
                 if(this.value) {
                     const selectedOption = this.options[this.selectedIndex];
                     inputCode.value = selectedOption.dataset.code;
                 }
             });
+
             paymentTypeSelect.addEventListener('change', function() {
                 const selectedValue = this.value;
 
                 if (selectedValue === 'Efectivo') {
-                    observationInput.value = 'Efectivo'; // No ponga nada por defecto
+                    observationInput.value = 'Efectivo'; 
                 } else if (selectedValue === 'Transferencia') {
                     observationInput.value = 'Número de transferencia: ';
                 } else if (selectedValue === 'Tarjeta') {
                     observationInput.value = 'Número de pago: ';
                 }
-            
-            // Opcional: enfocar el input para que el usuario escriba de una vez el número si lo desea
-            // observationsInput.focus();
-             });
+            });
 
             inputCode.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    processSelection();
+                }
+            });
+
+            inputSearchName.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     processSelection();
@@ -255,24 +295,24 @@
 
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-50 transition item-row';
-                    tr.innerHTML = `
-                        <td class="px-4 py-3 font-mono text-xs font-bold text-slate-600">${code}</td>
-                        <td class="px-4 py-3">
-                            <span class="text-sm font-semibold text-slate-800">${name}</span>
-                            <input type="hidden" name="items[${itemIndex}][product_id]" value="${productId}">
-                        </td>
-                        <td class="px-4 py-3 text-center font-mono text-slate-600">$${price.toFixed(2)}</td>
-                        <td class="px-4 py-3 text-center">
-                            <input type="number" name="items[${itemIndex}][quantity]" value="1" min="1" max="${maxStock}" 
-                                class="qty-input block w-16 text-center rounded-lg border-slate-200 bg-white text-slate-800 font-bold focus:border-emerald-500 focus:ring-emerald-500 text-sm py-1 px-1 mx-auto transition" data-price="${price}">
-                        </td>
-                        <td class="px-4 py-3 text-right font-bold font-mono text-slate-900 row-subtotal">$${price.toFixed(2)}</td>
-                        <td class="px-4 py-3 text-center">
-                            <button type="button" class="text-rose-500 hover:text-rose-700 font-bold text-xs p-1 hover:bg-rose-50 rounded transition btn-remove">
-                                Quitar
-                            </button>
-                        </td>
-                    `;
+                tr.innerHTML = `
+                    <td class="px-4 py-3 font-mono text-xs font-bold text-slate-600">${code}</td>
+                    <td class="px-4 py-3">
+                        <span class="text-sm font-semibold text-slate-800">${name}</span>
+                        <input type="hidden" name="items[${itemIndex}][product_id]" value="${productId}">
+                    </td>
+                    <td class="px-4 py-3 text-center font-mono text-slate-600">$${price.toFixed(2)}</td>
+                    <td class="px-4 py-3 text-center">
+                        <input type="number" name="items[${itemIndex}][quantity]" value="1" min="1" max="${maxStock}" 
+                            class="qty-input block w-16 text-center rounded-lg border-slate-200 bg-white text-slate-800 font-bold focus:border-emerald-500 focus:ring-emerald-500 text-sm py-1 px-1 mx-auto transition" data-price="${price}">
+                    </td>
+                    <td class="px-4 py-3 text-right font-bold font-mono text-slate-900 row-subtotal">$${price.toFixed(2)}</td>
+                    <td class="px-4 py-3 text-center">
+                        <button type="button" class="text-rose-500 hover:text-rose-700 font-bold text-xs p-1 hover:bg-rose-50 rounded transition btn-remove">
+                            Quitar
+                        </button>
+                    </td>
+                `;
 
                 detailWrapper.appendChild(tr);
                 itemIndex++;
@@ -305,8 +345,9 @@
 
             function clearInputs() {
                 inputCode.value = "";
+                inputSearchName.value = "";
                 selector.value = "";
-                inputCode.focus();
+                inputSearchName.focus();
             }
 
             function calculateGrandTotal() {

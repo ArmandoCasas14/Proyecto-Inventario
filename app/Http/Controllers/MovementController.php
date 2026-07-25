@@ -27,8 +27,14 @@ class MovementController extends Controller
 
         // 2. Obtener los tipos de movimiento para el select del filtro
         $movementTypes = MovementType::all();
+        $allProducts = Product::all();
 
-        return view('movements.index', compact('movements', 'movementTypes'));
+        // 3. Obtener todos los productos activos para alimentar el datalist del buscador
+        $products = Product::where('status', 1)
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return view('movements.index', compact('movements', 'movementTypes', 'products','allProducts'));
     }
 
     public function exportPdf(Request $request)
@@ -73,6 +79,7 @@ class MovementController extends Controller
         $products = Product::where('status', 1)
                             ->orderBy('name', 'asc')
                             ->get();
+                            
         // Excluimos 'Venta' del registro manual para que bodega no altere facturaciones sin control
         $movementTypes = MovementType::where('name', '!=', 'Venta')->get();
         
@@ -86,8 +93,10 @@ class MovementController extends Controller
             'movement_type_id' => 'required|exists:movement_types,id',
             'quantity'         => 'required|integer|min:1',
             'unit_price'       => 'nullable|numeric|min:0',
-            'observation'      => 'required|string|max:255',
-
+            'observation'      => 'nullable|string|max:255',
+        ], [
+            'product_id.required' => 'Debes seleccionar un producto válido de la lista desplegable.',
+            'product_id.exists'   => 'El producto seleccionado no es válido en el sistema.'
         ]);
 
         try {
@@ -123,7 +132,7 @@ class MovementController extends Controller
                     $product->increment('current_stock', $request->quantity);
                     $product->refresh();
 
-    // Si el stock volvió a estar por encima del mínimo, borramos las notificaciones de este producto
+                    // Si el stock volvió a estar por encima del mínimo, borramos las notificaciones de este producto
                     $productId = $product->id;
                     if ($product->current_stock > $product->minimum_stock) {
                       DB::table('notifications')
@@ -147,11 +156,10 @@ class MovementController extends Controller
             });
 
             return redirect()->route('movimientos.index')
-                             ->with('success', 'Movimiento de bodega registrado e inventario sincronizado.');
+                           ->with('success', 'Movimiento de bodega registrado e inventario sincronizado.');
 
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
     }
-    
 }
