@@ -75,6 +75,10 @@ class Product extends Model
         if ($stockstatus === 'agotado') {
             return $query->where('current_stock', '<=', 0);
         }
+        
+        if ($stockstatus === 'stock_minimo') {
+            return $query->whereColumn('current_stock', '<=', 'minimum_stock');
+        }
 
         return $query;
     }

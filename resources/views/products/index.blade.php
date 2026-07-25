@@ -123,7 +123,8 @@
                                         class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 shadow-sm transition-colors py-2.5">
                                     <option value="" {{ !request('stock') ? 'selected' : '' }}>Cualquier stock</option>
                                     <option value="disponible" {{ request('stock') === 'disponible' ? 'selected' : '' }}>En Stock</option>
-                                    <option value="agotado" {{ request('stock') === 'agotado' ? 'selected' : '' }}>Agotados / Mínimo</option>
+                                    <option value="agotado" {{ request('stock') === 'agotado' ? 'selected' : '' }}>Agotados</option>
+                                    <option value="stock_minimo" {{ request('stock') === 'stock_minimo' ? 'selected' : '' }}>Mínimo</option>
                                 </select>
                             </div>
 
@@ -192,13 +193,15 @@
                                             </span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4">
+                                    <td class="px-6 py-4 whitespace-nowrap">
                                         @if ($product->status)
-                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                                                <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500"></span>
                                                 {{ __('Activo') }}
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-600 dark:bg-slate-700/60 dark:text-slate-400">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-600 dark:bg-slate-700/60 dark:text-slate-400">
+                                                <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-slate-400"></span>
                                                 {{ __('Inactivo') }}
                                             </span>
                                         @endif
@@ -224,7 +227,7 @@
                                                 </svg>
                                             </a>
 
-                                            @if(auth()->user()->role->name === 'Administrador')
+                                            
                                                 <form action="{{ route('productos.toggleStatus', $product) }}" method="POST"
                                                     data-confirm="{{ $product->status ? __('¿Estás seguro de que deseas inactivar este producto?') : __('¿Estás seguro de que deseas activar este producto?') }}">
                                                     @csrf
@@ -246,7 +249,7 @@
                                                         </button>
                                                     @endif
                                                 </form>
-                                            @endif
+                                            
                                         </div>
                                     </td>
                                 </tr>

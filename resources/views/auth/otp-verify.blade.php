@@ -118,64 +118,59 @@
     </div>
 
     <!-- Script del Temporizador de 5 minutos -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const TOTAL_SECONDS = 5 * 60; // 5 Minutos (300 segundos)
-            const timerElement = document.getElementById('otp-timer');
-            const codeInput = document.getElementById('code');
-            const verifyBtn = document.getElementById('btn-verify');
-            const resendForm = document.getElementById('resend-form');
+   <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Obtenemos el timestamp de expiración directo desde Laravel (en segundos)
+        // Si no existe en la sesión, por defecto le asignamos 5 minutos desde ahora
+        const expiresAt = {{ session('otp_expires_at', now()->addMinutes(5)->timestamp) }};
+        
+        const timerElement = document.getElementById('otp-timer');
+        const codeInput = document.getElementById('code');
+        const verifyBtn = document.getElementById('btn-verify');
 
-            function formatTime(seconds) {
-                const minutes = Math.floor(seconds / 60);
-                const remainingSeconds = seconds % 60;
-                return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
-            }
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        }
 
-            let countdown = parseInt(localStorage.getItem('otp_countdown'));
-            let lastUpdate = parseInt(localStorage.getItem('otp_last_update'));
+        // Limpiamos cualquier rastro viejo en el navegador por seguridad
+        localStorage.removeItem('otp_countdown');
+        localStorage.removeItem('otp_last_update');
+        sessionStorage.removeItem('otp_countdown');
+
+        function updateTimer() {
             const now = Math.floor(Date.now() / 1000);
+            const secondsLeft = expiresAt - now;
 
-            if (isNaN(countdown) || isNaN(lastUpdate)) {
-                countdown = TOTAL_SECONDS;
-            } else {
-                const elapsed = now - lastUpdate;
-                countdown = Math.max(0, countdown - elapsed);
-            }
-
-            localStorage.setItem('otp_countdown', countdown);
-            localStorage.setItem('otp_last_update', now);
-
-            const interval = setInterval(function () {
-                if (countdown <= 0) {
-                    clearInterval(interval);
-                    timerElement.textContent = "00:00";
-                    timerElement.classList.remove('text-emerald-700', 'bg-white');
-                    timerElement.classList.add('text-rose-600', 'bg-rose-50', 'border-rose-200');
-                    
+            if (secondsLeft <= 0) {
+                timerElement.textContent = "00:00";
+                timerElement.classList.remove('text-emerald-700', 'bg-white');
+                timerElement.classList.add('text-rose-600', 'bg-rose-50', 'border-rose-200');
+                
+                if (codeInput) {
                     codeInput.disabled = true;
                     codeInput.placeholder = "EXPIRADO";
                     codeInput.classList.add('bg-slate-100', 'cursor-not-allowed');
-                    verifyBtn.disabled = true;
-                    
-                    localStorage.removeItem('otp_countdown');
-                    localStorage.removeItem('otp_last_update');
-                    return;
                 }
-
-                timerElement.textContent = formatTime(countdown);
-                countdown--;
-
-                localStorage.setItem('otp_countdown', countdown);
-                localStorage.setItem('otp_last_update', Math.floor(Date.now() / 1000));
-            }, 1000);
-
-            if (resendForm) {
-                resendForm.addEventListener('submit', function () {
-                    localStorage.setItem('otp_countdown', TOTAL_SECONDS);
-                    localStorage.setItem('otp_last_update', Math.floor(Date.now() / 1000));
-                });
+                if (verifyBtn) {
+                    verifyBtn.disabled = true;
+                }
+                return false;
             }
-        });
-    </script>
+
+            timerElement.textContent = formatTime(secondsLeft);
+            return true;
+        }
+
+        // Ejecución inicial
+        if (updateTimer()) {
+            const interval = setInterval(function () {
+                if (!updateTimer()) {
+                    clearInterval(interval);
+                }
+            }, 1000);
+        }
+    });
+</script>
 </x-guest-layout>

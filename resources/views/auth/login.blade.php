@@ -90,7 +90,7 @@
                 <!-- Session Status (Errores globales de sesión) -->
                 <x-auth-session-status class="mb-4" :status="session('status')" />
 
-                <form method="POST" action="{{ route('login') }}" class="space-y-5">
+                <form method="POST" action="{{ route('login') }}" class="space-y-6">
                     @csrf
 
                     <!-- Correo Electrónico -->
@@ -114,8 +114,7 @@
                     </div>
 
                     <!-- Contraseña -->
-                    <div>
-                        <div x-data="{ showPassword: false }" class="mt-4">
+                    <div x-data="{ showPassword: false }">
                         <div class="flex items-center justify-between mb-1.5">
                             <label for="password" class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                                 {{ __('Contraseña') }}
@@ -152,15 +151,16 @@
                         </div>
 
                         <x-input-error :messages="$errors->get('password')" class="mt-1.5 text-xs text-rose-600 dark:text-rose-400" />
-                    </div>
-                        
+                    </div> <!-- CIERRE DEL CONTENEDOR DE CONTRASEÑA -->
 
-                    <!-- Botón Ingresar (Sólido sin gradiente) -->
-                    <button type="submit" 
-                        class="w-full inline-flex justify-center items-center gap-2 px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-xl transition duration-150 shadow-md shadow-emerald-600/20 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2">
-                        <span>{{ __('Ingresar al Sistema') }}</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                    </button>
+                    <!-- Botón Ingresar -->
+                    <div class="pt-2">
+                        <button type="submit" 
+                            class="w-full inline-flex justify-center items-center gap-2 px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-xl transition duration-150 shadow-md shadow-emerald-600/20 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2">
+                            <span>{{ __('Ingresar al Sistema') }}</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        </button>
+                    </div>
                 </form>
 
             </div>

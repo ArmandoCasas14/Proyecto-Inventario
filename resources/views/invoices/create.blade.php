@@ -93,8 +93,8 @@
                             <select id="product_selector" class="hidden">
                                 <option value="">-- Seleccionar producto del catálogo --</option>
                                 @foreach($products as $product)
-                                    <option value="{{ $product->id }}" data-code="{{ $product->code }}" data-name="{{ $product->name }}" data-price="{{ $product->selling_price }}" data-stock="{{ $product->current_stock }}">
-                                        [{{ $product->code }}] {{ $product->name }} - ${{ number_format($product->selling_price, 2) }} (Disponibles: {{ $product->current_stock }})
+                                    <option value=" {{ $product->id }}" data-code="{{ $product->code }}" data-price="{{ $product->selling_price }}" data-name="{{ $product->name }}" data-stock="{{ $product->current_stock }}">
+                                         {{ $product->name }} (Stock: {{ $product->current_stock }})
                                     </option>
                                 @endforeach
                             </select>
