@@ -228,6 +228,26 @@
 
                 <!-- Cuerpo del Formulario -->
                 <div class="space-y-5">
+
+                    <!-- FILTRO AGREGADO: Producto -->
+                    <div>
+                        <label for="modal_product_id" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
+                            {{ __('Producto') }}
+                        </label>
+                        <select id="modal_product_id" name="product_id" 
+                                class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-rose-500 focus:ring-rose-500 py-2.5 shadow-sm transition-all">
+                            <option value="todos">{{ __('Todos los productos') }}</option>
+                            @if(isset($products))
+                                @foreach($products as $product)
+                                    <option value="{{ $product->id }}">
+                                        {{ $product->name }} ({{ $product->code }})
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+
+                    <!-- Tipo de Movimiento -->
                     <div>
                         <label for="modal_movement_type_id" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                             {{ __('Tipo de Movimiento') }}
@@ -241,6 +261,7 @@
                         </select>
                     </div>
 
+                    <!-- Rango de Fechas -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label for="date_from" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">

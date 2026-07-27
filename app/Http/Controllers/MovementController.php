@@ -50,6 +50,10 @@ class MovementController extends Controller
         // 3. Determinar el nombre del filtro para mostrarlo en el PDF
         $typeName = 'TODOS LOS MOVIMIENTOS';
 
+        if ($request->filled('product_id') && $request->product_id !== 'todos') {
+            $query->where('product_id', $request->product_id);
+        }
+
         if ($request->filled('movement_type_id') && $request->movement_type_id !== 'todos') {
             $query->where('movement_type_id', $request->movement_type_id);
             
