@@ -178,64 +178,92 @@
                 @endif
             </div>
 
-            <!-- MODAL DE GENERACIÓN DE REPORTE PDF -->
-            <x-modal name="modal-reporte-movimientos" focusable>
-                <form action="{{ route('movimientos.export-pdf') }}" method="GET" class="p-6 sm:p-8" target="_blank">
-                    <div class="border-b border-slate-200/80 dark:border-slate-700/80 pb-4 mb-6">
-                        <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100">
+        </div>
+    </div>
+
+    <!-- MODAL (UBICADO A NIVEL RAÍZ DE LA VISTA PARA EVITAR RECORTE Y SUPERPOSICIÓN) -->
+    <x-modal name="modal-reporte-movimientos" focusable>
+        <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border border-slate-100 dark:border-slate-700/60">
+            
+            <!-- Botón de cierre superior (X) -->
+            <button type="button" 
+                    x-on:click="$dispatch('close')" 
+                    class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 z-10">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <form action="{{ route('movimientos.export-pdf') }}" method="GET" class="p-6 sm:p-8" target="_blank">
+                
+                <!-- Encabezado con Icono -->
+                <div class="flex items-start gap-4 border-b border-slate-100 dark:border-slate-700/80 pb-5 mb-6 pr-6">
+                    <div class="p-3 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 rounded-2xl flex-shrink-0 border border-rose-100 dark:border-rose-900/30">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11v6m0 0l-3-3m3 3l3-3"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">
                             {{ __('Generar Reporte PDF de Movimientos') }}
                         </h3>
                         <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                             {{ __('Selecciona los filtros para estructurar el reporte de auditoría.') }}
                         </p>
                     </div>
+                </div>
 
-                    <div class="space-y-5">
+                <!-- Cuerpo del Formulario -->
+                <div class="space-y-5">
+                    <div>
+                        <label for="modal_movement_type_id" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
+                            {{ __('Tipo de Movimiento') }}
+                        </label>
+                        <select id="modal_movement_type_id" name="movement_type_id" required 
+                                class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-rose-500 focus:ring-rose-500 py-2.5 shadow-sm transition-all">
+                            <option value="todos">{{ __('Todos los movimientos') }}</option>
+                            @foreach($movementTypes as $type)
+                                <option value="{{ $type->id }}">{{ $type->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label for="modal_movement_type_id" class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                                {{ __('Tipo de Movimiento') }}
+                            <label for="date_from" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
+                                {{ __('Desde') }}
                             </label>
-                            <select id="modal_movement_type_id" name="movement_type_id" required 
-                                    class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5 shadow-sm">
-                                <option value="todos">{{ __('Todos los movimientos') }}</option>
-                                @foreach($movementTypes as $type)
-                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
-                                @endforeach
-                            </select>
+                            <input type="date" id="date_from" name="date_from" value="{{ date('Y-m-01') }}" required 
+                                   class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-rose-500 focus:ring-rose-500 py-2.5 shadow-sm transition-all">
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label for="date_from" class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                                    {{ __('Desde') }}
-                                </label>
-                                <input type="date" id="date_from" name="date_from" value="{{ date('Y-m-01') }}" required 
-                                       class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5 shadow-sm">
-                            </div>
-
-                            <div>
-                                <label for="date_to" class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                                    {{ __('Hasta') }}
-                                </label>
-                                <input type="date" id="date_to" name="date_to" value="{{ date('Y-m-d') }}" required 
-                                       class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5 shadow-sm">
-                            </div>
+                        <div>
+                            <label for="date_to" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
+                                {{ __('Hasta') }}
+                            </label>
+                            <input type="date" id="date_to" name="date_to" value="{{ date('Y-m-d') }}" required 
+                                   class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-rose-500 focus:ring-rose-500 py-2.5 shadow-sm transition-all">
                         </div>
                     </div>
+                </div>
 
-                    <div class="mt-8 flex justify-end gap-3 pt-4 border-t border-slate-200/80 dark:border-slate-700/80">
-                        <button type="button" x-on:click="$dispatch('close')" 
-                                class="px-5 py-2.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">
-                            {{ __('Cancelar') }}
-                        </button>
+                <!-- Footer / Botones -->
+                <div class="mt-8 flex items-center justify-end gap-3 pt-5 border-t border-slate-100 dark:border-slate-700/80">
+                    <button type="button" x-on:click="$dispatch('close')" 
+                            class="px-5 py-2.5 bg-slate-100 dark:bg-slate-700/60 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs uppercase tracking-wider rounded-xl transition-all">
+                        {{ __('Cancelar') }}
+                    </button>
 
-                        <button type="submit" class="px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm">
-                            {{ __('Descargar PDF') }}
-                        </button>
-                    </div>
-                </form>
-            </x-modal>
-
+                    <button type="submit" 
+                            class="inline-flex items-center gap-2 px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md shadow-rose-500/20 active:scale-[0.98]">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        {{ __('Descargar PDF') }}
+                    </button>
+                </div>
+            </form>
         </div>
-    </div>
+    </x-modal>
 </x-app-layout>
