@@ -28,4 +28,18 @@ class Category extends Model
 
         return $query;
     }
+
+    public function scopeOfStatus(Builder $query, ?string $status): Builder
+    {
+        // Si viene explícitamente 'todos', no aplicamos ningún filtro de estado
+        if ($status === 'todos') {
+            return $query;
+        }
+
+        // Si el valor es null o una cadena vacía '', establecemos '1' por defecto
+        $statusValue = ($status === null || $status === '') ? '1' : $status;
+
+        return $query->where('status', (int) $statusValue);
+    }
+
 }
