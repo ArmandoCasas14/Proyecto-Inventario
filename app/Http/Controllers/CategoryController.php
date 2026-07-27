@@ -11,6 +11,7 @@ class CategoryController extends Controller
     {
         $categories = Category::query()
             ->searchByName($request->input('search'))
+            ->ofStatus($request->input('status'))
             ->orderBy('name', 'asc')
             ->paginate(10)
             ->withQueryString(); // Conserva los filtros al cambiar de página
