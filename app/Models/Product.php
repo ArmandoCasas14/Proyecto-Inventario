@@ -85,8 +85,14 @@ class Product extends Model
 
     public function scopeOfStatus(Builder $query, ?string $status): Builder
     {
-        if ($status === null || $status === '') return $query;
+        // Si viene explícitamente 'todos', no aplicamos ningún filtro de estado
+        if ($status === 'todos') {
+            return $query;
+        }
 
-        return $query->where('status', (int)$status);
+        // Si el valor es null o una cadena vacía '', establecemos '1' por defecto
+        $statusValue = ($status === null || $status === '') ? '1' : $status;
+
+        return $query->where('status', (int) $statusValue);
     }
 }
