@@ -22,7 +22,8 @@ class InvoiceController extends Controller
         // 2. Aplicamos los scopes condicionales usando los inputs del formulario
         $invoices->byInvoiceNumber($request->input('invoice_number'))
                  ->byCustomer($request->input('customer'))
-                 ->byDate($request->input('date'));
+                 ->byDate($request->input('date'))
+                 ->byTypeOfPayment($request->input('payment_type'));
 
         // 3. Paginamos los resultados (ej: 10 por página) manteniendo los filtros en la URL
         $invoices = $invoices->paginate(10)->withQueryString();
