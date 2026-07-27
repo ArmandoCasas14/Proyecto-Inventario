@@ -70,7 +70,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
                         <!-- Entrada por Código Único -->
                         <div class="md:col-span-3">
-                            <label for="product_code" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Código / Scanner</label>
+                            <label for="product_code" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Código</label>
                             <input type="text" id="product_code" placeholder="Escriba código + Enter" 
                                    class="block w-full rounded-xl border-slate-200 bg-white text-emerald-700 font-mono font-bold focus:border-emerald-500 focus:ring-emerald-500 text-sm py-2 px-3 transition">
                         </div>

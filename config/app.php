@@ -123,4 +123,8 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'brevo' => [
+    'key' => env('BREVO_API_KEY'),
+    ],
+    
 ];

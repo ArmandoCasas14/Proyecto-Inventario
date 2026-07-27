@@ -11,6 +11,8 @@
         "dedoc/scramble": "^0.13.33",
         "laravel/framework": "^13.8",
         "laravel/tinker": "^3.0",
+        "symfony/brevo-mailer": "^8.1",
+        "symfony/http-client": "^8.1",
         "tymon/jwt-auth": "^2.3"
     },
     "require-dev": {
