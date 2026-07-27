@@ -20,7 +20,7 @@
                 <div class="flex items-center gap-3">
                     <!-- Botón para Abrir Modal -->
                     <button onclick="document.getElementById('importModal').classList.remove('hidden')" 
-                            class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-xl shadow-sm transition">
+                            class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl shadow-sm transition-all duration-150">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
                         </svg>
@@ -81,7 +81,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                         </svg>
-                         Crear Nuevo Producto
+                         Nuevo Producto
                     </a>
                     <a href="{{ route('productos.export-pdf', request()->query()) }}" 
                        class="inline-flex items-center px-4 py-2.5 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white font-semibold text-xs rounded-xl transition-all shadow-sm gap-2 focus:outline-none">
@@ -166,9 +166,9 @@
                                 </label>
                                 <select id="status" name="status" 
                                         class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 shadow-sm transition-colors py-2.5">
-                                    <option value="">Todos los estados</option>
-                                    <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Activos</option>
+                                    <option value="1" {{ request('status', '1') === '1' ? 'selected' : '' }}>Activos</option>
                                     <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Inactivos</option>
+                                    <option value="todos" {{ request('status') === 'todos' ? 'selected' : '' }}>Todos los estados</option>
                                 </select>
                             </div>
 

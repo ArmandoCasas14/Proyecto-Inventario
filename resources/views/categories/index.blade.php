@@ -47,28 +47,41 @@
                     <form action="{{ route('categorias.index') }}" method="GET">
                         <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
                             
-                            <!-- Campo de Búsqueda -->
-                            <div class="md:col-span-10">
+                            <!-- Campo de Búsqueda (8 cols) -->
+                            <div class="md:col-span-8">
                                 <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                                     {{ __('Buscar Categoría') }}
                                 </label>
                                 <div class="relative">
                                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por nombre o descripción..." 
-                                           class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5 pl-9 shadow-sm transition-colors">
+                                        class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5 pl-9 shadow-sm transition-colors">
                                     <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                                 </div>
                             </div>
+
+                            <!-- Estado (2 cols) -->
+                            <div class="md:col-span-2">
+                                <label for="status" class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                                    Estado
+                                </label>
+                                <select id="status" name="status" 
+                                        class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 shadow-sm transition-colors py-2.5">
+                                    <option value="1" {{ request('status', '1') === '1' ? 'selected' : '' }}>Activos</option>
+                                    <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Inactivos</option>
+                                    <option value="todos" {{ request('status') === 'todos' ? 'selected' : '' }}>Todos los estados</option>
+                                </select>
+                            </div>
                             
-                            <!-- Botones Buscar y Limpiar (X) -->
+                            <!-- Botones Buscar y Limpiar (2 cols) -->
                             <div class="md:col-span-2 flex items-center gap-2">
                                 <button type="submit" 
                                         class="w-full h-[38px] bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm flex items-center justify-center">
                                     {{ __('BUSCAR') }}
                                 </button>
 
-                                @if(request()->filled('search'))
+                                @if(request()->anyFilled(['search', 'status']))
                                     <a href="{{ route('categorias.index') }}" title="{{ __('Limpiar filtros') }}"
-                                       class="h-[38px] px-3 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs uppercase rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors flex items-center justify-center shrink-0">
+                                    class="h-[38px] px-3 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs uppercase rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors flex items-center justify-center shrink-0">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                                         </svg>
