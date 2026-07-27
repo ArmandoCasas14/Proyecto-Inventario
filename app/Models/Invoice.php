@@ -56,4 +56,13 @@ class Invoice extends Model
 
         return $query;
     }
+
+    public function scopeByTypeOfPayment(Builder $query, ?string $paymentType): Builder
+    {
+        if (!empty($paymentType)) {
+            return $query->where('payment_type', $paymentType);
+        }
+
+        return $query;
+    }
 }
