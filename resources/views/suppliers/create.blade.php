@@ -30,7 +30,7 @@
                     <div>
                         <x-input-label for="legal_name" :value="__('Razón Social')" class="text-xs font-bold uppercase text-slate-500 dark:text-slate-400" />
                         <x-text-input id="legal_name" name="legal_name" type="text" class="mt-1.5 block w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5"
-                                      :value="old('legal_name')" required autofocus placeholder="Ej: Distribuidora de Carnes S.A.S." />
+                                      :value="old('legal_name')" required autofocus placeholder="Ej: Distribuidora de Carnes S.A.S."/>
                         <x-input-error :messages="$errors->get('legal_name')" class="mt-2" />
                     </div>
 
@@ -45,14 +45,14 @@
                         <div>
                             <x-input-label for="phone" :value="__('Teléfono')" class="text-xs font-bold uppercase text-slate-500 dark:text-slate-400" />
                             <x-text-input id="phone" name="phone" type="text" class="mt-1.5 block w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5"
-                                          :value="old('phone')" placeholder="Ej: +57 300 123 4567" />
+                                          :value="old('phone')" placeholder="Ej: +57 300 123 4567" required/>
                             <x-input-error :messages="$errors->get('phone')" class="mt-2" />
                         </div>
 
                         <div>
                             <x-input-label for="email" :value="__('Correo Electrónico')" class="text-xs font-bold uppercase text-slate-500 dark:text-slate-400" />
                             <x-text-input id="email" name="email" type="email" class="mt-1.5 block w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5"
-                                          :value="old('email')" placeholder="proveedor@contacto.com" />
+                                          :value="old('email')" placeholder="proveedor@contacto.com" required />
                             <x-input-error :messages="$errors->get('email')" class="mt-2" />
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                     <div>
                         <x-input-label for="address" :value="__('Dirección')" class="text-xs font-bold uppercase text-slate-500 dark:text-slate-400" />
                         <x-text-input id="address" name="address" type="text" class="mt-1.5 block w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5"
-                                      :value="old('address')" placeholder="Ej: Calle 10 # 15-20" />
+                                      :value="old('address')" placeholder="Ej: Calle 10 # 15-20" required/>
                         <x-input-error :messages="$errors->get('address')" class="mt-2" />
                     </div>
 
