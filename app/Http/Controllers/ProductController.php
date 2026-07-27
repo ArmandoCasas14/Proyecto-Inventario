@@ -251,7 +251,9 @@ class ProductController extends Controller
 
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::where('status', 1)
+                                ->orderBy('name', 'asc')
+                                ->get();
         $suppliers = Supplier::where('status', 1)
                                 ->orderBy('legal_name', 'asc')
                                 ->get(); // Solo proveedores activos
@@ -261,16 +263,19 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code'           => 'required|string|unique:products,code|max:10',
-            'name'           => 'required|string|max:100',
-            'description'    => 'nullable|string|max:255',
-            'category_id'    => 'required|exists:categories,id',//
-            'supplier_id'    => 'required|exists:suppliers,id',
-            'purchase_price' => 'required|numeric|min:0',
-            'selling_price'  => 'required|numeric|min:0',
-            'current_stock'  => 'required|integer|min:0',
-            'minimum_stock'  => 'required|integer|min:0',
-        ]);
+        'code'           => 'required|string|max:50|unique:products,code',
+        'name'           => 'required|string|max:255',
+        'description'    => 'nullable|string',
+        'category_id'    => 'required|exists:categories,id',
+        'supplier_id'    => 'required|exists:suppliers,id',
+        'purchase_price' => 'required|numeric|min:0|lte:selling_price', // <= Debe ser menor o igual que selling_price
+        'selling_price'  => 'required|numeric|min:0|gte:purchase_price',  // >= Debe ser mayor o igual que purchase_price
+        'current_stock'  => 'required|integer|min:0',
+        'minimum_stock'  => 'required|integer|min:0',
+    ], [
+        'purchase_price.lte' => 'El precio de compra no puede ser mayor al precio de venta.',
+        'selling_price.gte'  => 'El precio de venta debe ser mayor o igual al precio de compra.',
+    ]);
 
         Product::create(array_merge($request->all(), ['status' => 1]));
 
@@ -292,12 +297,14 @@ class ProductController extends Controller
             'description'    => 'nullable|string',
             'category_id'    => 'required|exists:categories,id',
             'supplier_id'    => 'required|exists:suppliers,id',
-            'purchase_price' => 'required|numeric|min:0',
-            'selling_price'  => 'required|numeric|min:0',
+            'purchase_price' => 'required|numeric|min:0|lte:selling_price', // <= Debe ser menor o igual que selling_price
+            'selling_price'  => 'required|numeric|min:0|gte:purchase_price',  // >= Debe ser mayor o igual que purchase_price
             'minimum_stock'  => 'required|integer|min:0',
             'status'         => 'required|boolean',
+        ], [
+            'purchase_price.lte' => 'El precio de compra no puede ser mayor al precio de venta.',
+            'selling_price.gte'  => 'El precio de venta debe ser mayor o igual al precio de compra.',
         ]);
-
         $product->update($request->except('current_stock')); // Evitamos actualizar el stock actual desde aquí
 
         return redirect()->route('productos.index')->with('success', 'Producto actualizado con éxito.');
