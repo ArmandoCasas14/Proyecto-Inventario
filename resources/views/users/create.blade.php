@@ -33,7 +33,7 @@
                         <x-text-input id="name" name="name" type="text" 
                                       class="mt-1.5 block w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5"
                                       :value="old('name')" required autofocus />
-                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                        <x-input-error :messages="$errors->get('name')" class="mt-1.5" />
                     </div>
 
                     <!-- Email -->
@@ -42,10 +42,12 @@
                         <x-text-input id="email" name="email" type="email" 
                                       class="mt-1.5 block w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5"
                                       :value="old('email')" required />
-                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                        <x-input-error :messages="$errors->get('email')" class="mt-1.5" />
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- FILA DOBLE: ROL Y CONTRASEÑA (items-start evita deformaciones) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start">
+                        
                         <!-- Rol -->
                         <div>
                             <x-input-label for="role_id" :value="__('Rol')" class="text-xs font-bold uppercase text-slate-500 dark:text-slate-400" />
@@ -58,7 +60,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <x-input-error :messages="$errors->get('role_id')" class="mt-2" />
+                            <x-input-error :messages="$errors->get('role_id')" class="mt-1.5" />
                         </div>
 
                         <!-- Contraseña (Temporal) -->
@@ -67,7 +69,23 @@
                             <x-text-input id="password" name="password" type="password" 
                                           class="mt-1.5 block w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5" 
                                           required />
-                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                            
+                            <!-- ALERTA ORGANIZADA PARA MULTIPLES ERRORES DE CONTRASEÑA -->
+                            @if ($errors->has('password'))
+                                <div class="mt-2.5 p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 rounded-xl space-y-1">
+                                    <div class="text-[11px] font-bold text-red-600 dark:text-red-400 flex items-center gap-1.5">
+                                        <svg class="w-3.5 h-3.5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                        </svg>
+                                        <span>{{ __('Requisitos no cumplidos:') }}</span>
+                                    </div>
+                                    <ul class="list-disc list-inside text-[11px] text-red-600 dark:text-red-300 space-y-0.5 pl-1">
+                                        @foreach ($errors->get('password') as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                         </div>
                     </div>
 
