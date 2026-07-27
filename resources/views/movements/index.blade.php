@@ -49,13 +49,25 @@
                     <form action="{{ route('movimientos.index') }}" method="GET">
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 items-end">
                             
-                            <!-- Producto -->
+                            <!-- Producto con Datalist Integrado -->
                             <div class="lg:col-span-3">
                                 <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                                     {{ __('Producto') }}
                                 </label>
-                                <input type="text" name="product" value="{{ request('product') }}" placeholder="Nombre o código..." 
+                                <input type="text" name="product" id="product_search_input" value="{{ request('product') }}" 
+                                       list="products-list"
+                                       placeholder="Nombre o código..." 
                                        class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5 shadow-sm">
+                                
+                                <datalist id="products-list">
+                                    @if(isset($products))
+                                        @foreach($products as $product)
+                                            <option value="{{ $product->name }}" data-code="{{ $product->code }}">
+                                                [{{ $product->code }}] - ${{ number_format($product->selling_price, 2) }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </datalist>
                             </div>
 
                             <!-- Encargado -->
@@ -265,5 +277,25 @@
                 </div>
             </form>
         </div>
-    </x-modal>
+    </div>
+
+    <!-- SCRIPT DE APOYO PARA EL DATALIST -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('product_search_input');
+            const dataList = document.getElementById('products-list');
+
+            if (searchInput && dataList) {
+                searchInput.addEventListener('input', function() {
+                    const typedValue = this.value.trim().toLowerCase();
+                    for (let i = 0; i < dataList.options.length; i++) {
+                        const opt = dataList.options[i];
+                        if (opt.value.toLowerCase() === typedValue) {
+                            break;
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </x-app-layout>

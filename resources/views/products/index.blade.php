@@ -61,19 +61,28 @@
                     </div>
                 @endif
 
-                <!-- FILTROS Y BÚSQUEDA ALINEADOS (ESTILO MOVIMIENTOS) -->
+                <!-- FILTROS Y BÚSQUEDA ALINEADOS -->
                 <div class="bg-slate-50/70 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700/60">
                     <form action="{{ route('productos.index') }}" method="GET">
                         <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
                             
-                            <!-- Búsqueda -->
+                            <!-- Búsqueda con Datalist Integrado -->
                             <div class="md:col-span-3">
                                 <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                                     Buscar Producto
                                 </label>
-                                <input type="text" name="search" value="{{ request('search') }}" 
+                                <input type="text" name="search" id="product_search_input" value="{{ request('search') }}" 
+                                       list="products-list"
                                        placeholder="Nombre o código..." 
                                        class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 shadow-sm transition-colors py-2.5">
+                                
+                                <datalist id="products-list">
+                                    @foreach($allProducts as $productItem)
+                                        <option value="{{ $productItem->name }}" data-code="{{ $productItem->code }}">
+                                            [{{ $productItem->code }}] - ${{ number_format($productItem->selling_price, 2) }}
+                                        </option>
+                                    @endforeach
+                                </datalist>
                             </div>
 
                             <!-- Categoría -->
@@ -220,7 +229,7 @@
 
                                             
                                                 <form action="{{ route('productos.toggleStatus', $product) }}" method="POST"
-                                                      data-confirm="{{ $product->status ? __('¿Estás seguro de que deseas inactivar este producto?') : __('¿Estás seguro de que deseas activar este producto?') }}">
+                                                    data-confirm="{{ $product->status ? __('¿Estás seguro de que deseas inactivar este producto?') : __('¿Estás seguro de que deseas activar este producto?') }}">
                                                     @csrf
                                                     @method('PATCH')
 
@@ -265,4 +274,22 @@
 
         </div>
     </div>
+
+    <!-- SCRIPT DE APOYO PARA EL DATALIST DE BÚSQUEDA -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('product_search_input');
+            const dataList = document.getElementById('products-list');
+
+            searchInput.addEventListener('input', function() {
+                const typedValue = this.value.trim().toLowerCase();
+                for (let i = 0; i < dataList.options.length; i++) {
+                    const opt = dataList.options[i];
+                    if (opt.value.toLowerCase() === typedValue) {
+                        break;
+                    }
+                }
+            });
+        });
+    </script>
 </x-app-layout>

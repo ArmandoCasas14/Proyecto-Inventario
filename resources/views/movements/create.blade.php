@@ -35,18 +35,27 @@
                 <form action="{{ route('movimientos.store') }}" method="POST" class="space-y-6">
                     @csrf
 
-                    <!-- Producto -->
+                    <!-- Producto con Datalist Global -->
                     <div>
-                        <x-input-label for="product_id" :value="__('Seleccionar Producto')" class="text-xs font-bold uppercase text-slate-500 dark:text-slate-400" />
-                        <select name="product_id" id="product_id" required 
-                                class="mt-1.5 block w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5 shadow-sm">
-                            <option value="">{{ __('Seleccione un producto') }}</option>
+                        <x-input-label for="product_search" :value="__('Seleccionar Producto')" class="text-xs font-bold uppercase text-slate-500 dark:text-slate-400" />
+                        
+                        <!-- Input visual que interactúa con el Datalist -->
+                        <input type="text" id="product_search" name="product_name_search" list="products-list" 
+                               value="{{ old('product_name_search') }}" 
+                               placeholder="Escribe el nombre o código del producto..." 
+                               required
+                               class="mt-1.5 block w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5 shadow-sm">
+
+                        <!-- Campo oculto que enviará el ID real del producto seleccionado hacia el controlador -->
+                        <input type="hidden" name="product_id" id="product_id" value="{{ old('product_id') }}">
+
+                        <!-- Listado completo de productos (puedes usar $allProducts o $products según envíes desde tu controlador) -->
+                        <datalist id="products-list">
                             @foreach($products as $product)
-                                <option value="{{ $product->id }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>
-                                    {{ $product->name }} — Stock Actual: {{ $product->current_stock }}
-                                </option>
+                                <option data-id="{{ $product->id }}" value="{{ $product->name }} — Stock Actual: {{ $product->current_stock }} [Cod: {{ $product->code }}]">
                             @endforeach
-                        </select>
+                        </datalist>
+
                         <x-input-error :messages="$errors->get('product_id')" class="mt-2" />
                     </div>
 
@@ -107,4 +116,24 @@
             </div>
         </div>
     </div>
+
+    <!-- SCRIPT DE APOYO PARA VINCULAR EL DATALIST CON EL INPUT HIDDEN DE ID -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('product_search');
+            const hiddenIdInput = document.getElementById('product_id');
+            const dataListOptions = document.querySelectorAll('#products-list option');
+
+            searchInput.addEventListener('input', function() {
+                let val = this.value;
+                hiddenIdInput.value = ''; // Limpiar por si escriben algo inválido
+                
+                dataListOptions.forEach(function(option) {
+                    if (option.value === val) {
+                        hiddenIdInput.value = option.getAttribute('data-id');
+                    }
+                });
+            });
+        });
+    </script>
 </x-app-layout>
