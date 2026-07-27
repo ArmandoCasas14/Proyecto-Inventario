@@ -277,6 +277,7 @@
                 </div>
             </form>
         </div>
+    </x-modal>
     </div>
 
     <!-- SCRIPT DE APOYO PARA EL DATALIST -->
