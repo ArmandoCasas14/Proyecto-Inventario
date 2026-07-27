@@ -44,7 +44,7 @@
                     </div>
                 @endif
 
-                <!-- BARRA DE BÚSQUEDA Y FILTROS -->
+                <!-- BARRA DE BÚSQUEDA Y FILTROS DEL INDEX -->
                 <div class="bg-slate-50/70 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700/60">
                     <form action="{{ route('movimientos.index') }}" method="GET">
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 items-end">
@@ -193,7 +193,7 @@
         </div>
     </div>
 
-    <!-- MODAL (UBICADO A NIVEL RAÍZ DE LA VISTA PARA EVITAR RECORTE Y SUPERPOSICIÓN) -->
+    <!-- MODAL DE REPORTE PDF -->
     <x-modal name="modal-reporte-movimientos" focusable>
         <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border border-slate-100 dark:border-slate-700/60">
             
@@ -229,22 +229,27 @@
                 <!-- Cuerpo del Formulario -->
                 <div class="space-y-5">
 
-                    <!-- FILTRO AGREGADO: Producto -->
+                    <!-- FILTRO DE PRODUCTO CON DATALIST (ACTUALIZADO) -->
                     <div>
-                        <label for="modal_product_id" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
+                        <label for="modal_product_search_input" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                             {{ __('Producto') }}
                         </label>
-                        <select id="modal_product_id" name="product_id" 
-                                class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-rose-500 focus:ring-rose-500 py-2.5 shadow-sm transition-all">
-                            <option value="todos">{{ __('Todos los productos') }}</option>
+                        <input type="text" 
+                               name="product" 
+                               id="modal_product_search_input" 
+                               list="modal-products-list"
+                               placeholder="Escribe nombre o código (dejar vacío para todos)..." 
+                               class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-rose-500 focus:ring-rose-500 py-2.5 shadow-sm transition-all">
+                        
+                        <datalist id="modal-products-list">
                             @if(isset($products))
                                 @foreach($products as $product)
-                                    <option value="{{ $product->id }}">
-                                        {{ $product->name }} ({{ $product->code }})
+                                    <option value="{{ $product->name }}" data-code="{{ $product->code }}">
+                                        [{{ $product->code }}] - ${{ number_format($product->selling_price, 2) }}
                                     </option>
                                 @endforeach
                             @endif
-                        </select>
+                        </datalist>
                     </div>
 
                     <!-- Tipo de Movimiento -->
@@ -299,25 +304,5 @@
             </form>
         </div>
     </x-modal>
-    </div>
 
-    <!-- SCRIPT DE APOYO PARA EL DATALIST -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('product_search_input');
-            const dataList = document.getElementById('products-list');
-
-            if (searchInput && dataList) {
-                searchInput.addEventListener('input', function() {
-                    const typedValue = this.value.trim().toLowerCase();
-                    for (let i = 0; i < dataList.options.length; i++) {
-                        const opt = dataList.options[i];
-                        if (opt.value.toLowerCase() === typedValue) {
-                            break;
-                        }
-                    }
-                });
-            }
-        });
-    </script>
 </x-app-layout>
