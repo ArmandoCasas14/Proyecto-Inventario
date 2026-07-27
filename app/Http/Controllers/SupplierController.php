@@ -54,9 +54,9 @@ class SupplierController extends Controller
         $request->validate([
             'legal_name' => 'required|string|max:100',
             'nit'        => 'required|string|max:10|unique:suppliers,nit',
-            'phone'      => 'nullable|string|max:20',
-            'email'      => 'nullable|email|max:45',
-            'address'    => 'nullable|string|max:100',
+            'phone'      => 'required|string|max:20',
+            'email'      => 'required|email|max:45',
+            'address'    => 'required|string|max:100',
         ]);
 
         // Por defecto creamos el proveedor con estado activo (1)
@@ -81,9 +81,9 @@ class SupplierController extends Controller
         $request->validate([
             'legal_name' => 'required|string|max:255',
             'nit'        => 'required|string|max:50|unique:suppliers,nit,' . $supplier->id,
-            'phone'      => 'nullable|string|max:50',
-            'email'      => 'nullable|email|max:255',
-            'address'    => 'nullable|string|max:255',
+            'phone'      => 'required|string|max:50',
+            'email'      => 'required|email|max:255',
+            'address'    => 'required|string|max:255',
             'status'     => 'required|in:0,1',
         ]);
 

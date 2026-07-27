@@ -17,18 +17,21 @@ class ProductController extends Controller
     {
         // 1. Aplicamos los Scopes leyendo los datos de la URL ($request)
         $products = Product::with(['category', 'supplier'])
-                           ->search($request->get('search'))
-                           ->ofCategory($request->get('category_id'))
-                           ->stockStatus($request->get('stock'))
-                           ->ofStatus($request->input('status'))
-                           ->orderBy('name', 'asc')
-                           ->paginate(10)
-                           ->withQueryString();
+                        ->search($request->get('search'))
+                        ->ofCategory($request->get('category_id'))
+                        ->stockStatus($request->get('stock'))
+                        ->ofStatus($request->input('status'))
+                        ->orderBy('name', 'asc')
+                        ->paginate(10)
+                        ->withQueryString();
 
         // 2. Traemos las categorías para armar el menú de filtros laterales
         $categories = Category::orderBy('name', 'asc')->get();
 
-        return view('products.index', compact('products', 'categories'));
+        // 3. Obtenemos la lista completa para el datalist de búsqueda
+        $allProducts = Product::select('id', 'name', 'code', 'selling_price')->get();
+
+        return view('products.index', compact('products', 'categories', 'allProducts'));
     }
 
     public function exportPdf(Request $request)

@@ -13,9 +13,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class MovementController extends Controller
 {
-    public function index(Request $request)
+   public function index(Request $request)
     {
-        // 1. Ejecutar la consulta aplicando consecutivamente los scopes individuales
+        // 1. Ejecutar la consulta aplicando los scopes
         $movements = Movement::with(['product', 'movementType', 'user'])
             ->ofProduct($request->input('product'))
             ->ofType($request->input('movement_type_id'))
@@ -25,10 +25,15 @@ class MovementController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        // 2. Obtener los tipos de movimiento para el select del filtro
+        // 2. Tipos de movimiento para select
         $movementTypes = MovementType::all();
 
-        return view('movements.index', compact('movements', 'movementTypes'));
+        // 3. Productos activos para el datalist del buscador de la tabla
+        $products = Product::where('status', 1)
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return view('movements.index', compact('movements', 'movementTypes', 'products'));
     }
 
     public function exportPdf(Request $request)
@@ -73,6 +78,7 @@ class MovementController extends Controller
         $products = Product::where('status', 1)
                             ->orderBy('name', 'asc')
                             ->get();
+                            
         // Excluimos 'Venta' del registro manual para que bodega no altere facturaciones sin control
         $movementTypes = MovementType::where('name', '!=', 'Venta')->get();
         
@@ -87,7 +93,9 @@ class MovementController extends Controller
             'quantity'         => 'required|integer|min:1',
             'unit_price'       => 'nullable|numeric|min:0',
             'observation'      => 'nullable|string|max:255',
-
+        ], [
+            'product_id.required' => 'Debes seleccionar un producto válido de la lista desplegable.',
+            'product_id.exists'   => 'El producto seleccionado no es válido en el sistema.'
         ]);
 
         try {
@@ -123,7 +131,7 @@ class MovementController extends Controller
                     $product->increment('current_stock', $request->quantity);
                     $product->refresh();
 
-    // Si el stock volvió a estar por encima del mínimo, borramos las notificaciones de este producto
+                    // Si el stock volvió a estar por encima del mínimo, borramos las notificaciones de este producto
                     $productId = $product->id;
                     if ($product->current_stock > $product->minimum_stock) {
                       DB::table('notifications')
@@ -147,11 +155,10 @@ class MovementController extends Controller
             });
 
             return redirect()->route('movimientos.index')
-                             ->with('success', 'Movimiento de bodega registrado e inventario sincronizado.');
+                           ->with('success', 'Movimiento de bodega registrado e inventario sincronizado.');
 
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
     }
-    
 }

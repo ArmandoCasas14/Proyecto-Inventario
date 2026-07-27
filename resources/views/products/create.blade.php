@@ -70,16 +70,23 @@
                         </div>
 
                         <div>
-                            <x-input-label for="supplier_id" :value="__('Proveedor')" class="text-xs font-bold uppercase text-slate-500 dark:text-slate-400" />
-                            <select id="supplier_id" name="supplier_id" required
-                                    class="mt-1.5 block w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5">
-                                <option value="">{{ __('Selecciona un proveedor') }}</option>
+                            <x-input-label for="supplier_search" :value="__('Proveedor')" class="text-xs font-bold uppercase text-slate-500 dark:text-slate-400" />
+                            
+                            <!-- Input de texto con el buscador datalist -->
+                            <x-text-input id="supplier_search" name="supplier_name_search" type="text" list="suppliers-list"
+                                          class="mt-1.5 block w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5"
+                                          :value="old('supplier_name_search')" required placeholder="Escribe o selecciona un proveedor..." />
+                            
+                            <!-- Input oculto para enviar el ID del proveedor al backend -->
+                            <input type="hidden" id="supplier_id" name="supplier_id" value="{{ old('supplier_id') }}">
+
+                            <!-- Lista de opciones del buscador -->
+                            <datalist id="suppliers-list">
                                 @foreach ($suppliers as $supplier)
-                                    <option value="{{ $supplier->id }}" @selected(old('supplier_id') == $supplier->id)>
-                                        {{ $supplier->legal_name }}
-                                    </option>
+                                    <option data-id="{{ $supplier->id }}" value="{{ $supplier->legal_name }}"></option>
                                 @endforeach
-                            </select>
+                            </datalist>
+
                             <x-input-error :messages="$errors->get('supplier_id')" class="mt-2" />
                         </div>
                     </div>
@@ -136,4 +143,32 @@
             </div>
         </div>
     </div>
+
+    <!-- Script directo garantizado para mapear el ID del Proveedor -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.getElementById('supplier_search');
+            const datalist = document.getElementById('suppliers-list');
+            const hiddenInput = document.getElementById('supplier_id');
+
+            function actualizarIdProveedor() {
+                hiddenInput.value = ''; // Limpiar por defecto
+                for (let option of datalist.options) {
+                    if (option.value === input.value) {
+                        hiddenInput.value = option.getAttribute('data-id');
+                        break;
+                    }
+                }
+            }
+
+            // Escuchar cambios al escribir o seleccionar
+            input.addEventListener('input', actualizarIdProveedor);
+            input.addEventListener('change', actualizarIdProveedor);
+
+            // Validar por si la página recargó con errores y ya tenía un valor escrito
+            if (input.value) {
+                actualizarIdProveedor();
+            }
+        });
+    </script>
 </x-app-layout>
