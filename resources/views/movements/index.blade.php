@@ -230,22 +230,37 @@
                 <div class="space-y-5">
 
                     <!-- FILTRO DE PRODUCTO CON DATALIST (ACTUALIZADO) -->
-                    <div>
+                  <div x-data="{
+                        syncProductId(e) {
+                            const val = e.target.value.trim();
+                            // Busca en el datalist la opción que coincida exactamente con el texto de la selección
+                            const option = document.querySelector(`#modal-products-list option[value='${val}']`);
+                            
+                            // Si hay coincidencia, asigna el data-id al input oculto, de lo contrario lo deja vacío
+                            $refs.hiddenProductId.value = option ? option.dataset.id : '';
+                        }
+                    }">
                         <label for="modal_product_search_input" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                             {{ __('Producto') }}
                         </label>
+
+                        <!-- Campo oculto que enviará el product_id al controlador -->
+                        <input type="hidden" name="product_id" x-ref="hiddenProductId" value="">
+
+                        <!-- Campo visible de búsqueda -->
                         <input type="text" 
-                               name="product" 
-                               id="modal_product_search_input" 
-                               list="modal-products-list"
-                               placeholder="Escribe nombre o código (dejar vacío para todos)..." 
-                               class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-rose-500 focus:ring-rose-500 py-2.5 shadow-sm transition-all">
+                            id="modal_product_search_input" 
+                            list="modal-products-list"
+                            @input="syncProductId($event)"
+                            placeholder="Escribe nombre o código (dejar vacío para todos)..." 
+                            class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-rose-500 focus:ring-rose-500 py-2.5 shadow-sm transition-all">
                         
                         <datalist id="modal-products-list">
                             @if(isset($products))
                                 @foreach($products as $product)
-                                    <option value="{{ $product->name }}" data-code="{{ $product->code }}">
-                                        [{{ $product->code }}] - ${{ number_format($product->selling_price, 2) }}
+                                    <!-- Formato: [CÓDIGO] NOMBRE DEL PRODUCTO -->
+                                    <option value="[{{ $product->code }}] {{ $product->name }}" data-id="{{ $product->id }}">
+                                        ${{ number_format($product->selling_price, 2) }}
                                     </option>
                                 @endforeach
                             @endif
