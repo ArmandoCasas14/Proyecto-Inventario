@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
                 auth()->user()->unreadNotifications->markAsRead();
                 return back();
                 })->name('notifications.markAsRead');
+            Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
             Route::get('suppliers', [SupplierController::class, 'index'])->name('proveedores.index');
             Route::get('products/export-pdf', [ProductController::class, 'exportPdf'])->name('productos.export-pdf');
@@ -38,7 +39,6 @@ Route::middleware('auth')->group(function () {
             Route::patch('products/{product}/toggle', [ProductController::class, 'toggleStatus'])->name('productos.toggleStatus');
 
                 Route::middleware(['role:Administrador'])->group(function () {
-                    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
                     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
                     Route::resource('categories', CategoryController::class)->names('categorias');
                     Route::resource('users', UserController::class)->names('usuarios');
