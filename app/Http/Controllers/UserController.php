@@ -56,14 +56,32 @@ class UserController extends Controller
     }
     public function update(Request $request, User $user)
     {
-        $request->validate([
-            'name'      => 'required|string|max:100',
-            'email'     => 'required|email|max:45|unique:users,email,' . $user->id,
-            'role_id'   => 'required|exists:roles,id',
-            'status'    => 'required|boolean',
+        $validated = $request->validate([
+            'name'     => 'required|string|max:100',
+            'email'    => 'required|email|max:45|unique:users,email,' . $user->id,
+            'role_id'  => 'required|exists:roles,id',
+            'status'   => 'required|boolean',
+            'password' => [
+                'nullable', // Permite que venga vacío al editar
+                'string',
+                // 'confirmed', // Descomenta si usas un campo password_confirmation en la vista
+                Password::min(8)
+                    ->letters()       // Exige al menos una letra
+                    ->mixedCase()     // Exige al menos una mayúscula y una minúscula
+                    ->numbers()       // Exige al menos un número
+                    ->symbols()       // Exige al menos un carácter especial
+            ],
         ]);
 
-        $user->update($request->only(['name', 'email', 'role_id', 'status']));
+        // Verificamos si se envió una contraseña nueva para cifrarla y actualizarla
+        if (!empty($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            // Si está vacía, la eliminamos para no sobrescribir la contraseña actual con null
+            unset($validated['password']);
+        }
+
+        $user->update($validated);
 
         return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado correctamente.');
     }

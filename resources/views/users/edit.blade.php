@@ -46,6 +46,15 @@
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
 
+                    <!-- Contraseña -->
+                    <div>
+                        <x-input-label for="password" :value="__('Contraseña (Opcional)')" class="text-xs font-bold uppercase text-slate-500 dark:text-slate-400" />
+                        <x-text-input id="password" name="password" type="password" 
+                                      class="mt-1.5 block w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 focus:border-emerald-500 focus:ring-emerald-500 py-2.5"
+                                      placeholder="Dejar en blanco para mantener la actual" />
+                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    </div>
+
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <!-- Rol -->
                         <div>
