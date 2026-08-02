@@ -86,7 +86,9 @@ Abrir la terminal de Ubuntu:
 Abre tu terminal de Ubuntu (en WSL) donde tienes configurado Git.
 Navegar al directorio de trabajo:
 Ubícate en la carpeta donde deseas descargar el proyecto (por ejemplo, en tu directorio personal o una carpeta de proyectos):
+
 ![alt text](image-8.png)
+
 Clonar el repositorio:
 Ejecuta el comando git clone seguido de la URL del repositorio remoto de tu proyecto:
 ``` bash
@@ -183,10 +185,13 @@ Estos archivos ya están creados en el repositorio del proyecto, facilitando par
 ## Base de Datos en Render
 Se debe ingresar a la página de render para ello se puede usar el siguiente link:
 * render.com
+
 Se debe seguir el proceso normal de logueo registrándose o iniciando sesión con una cuenta ya creada, debería de mostrar el siguiente dashboard:
+
 ![alt text](image-24.png)
 Ya dentro del dashboard de render se puede crear el servicio para la base de datos, para ello se selecciona en la opción de new que se observa en la imagen, se despliega el siguiente menú:
 ![alt text](image-25.png)
+
 Se debe seleccionar la opción que dice Postgres.
 ![alt text](image-26.png)
 Se puede poner un nombre cualquiera, como “Base de datos para despliegue” en project, se puede dejar vacío en Database le ponemos el nombre de la base de datos en este caso le podemos poner la que configuramos en el .env, en usuario se debe poner el nombre del usuario administrador, en la región se puede poner la más cercana a la ubicación, y asegurarse de recordar dicha ubicación porque se debe usar luego para el servicio del aplicativo.
