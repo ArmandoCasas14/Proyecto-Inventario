@@ -7,10 +7,11 @@ Para la puesta en marcha y ejecución del entorno de desarrollo y despliegue loc
 * Control de Versiones: Git configurado dentro del entorno de WSL (Ubuntu).
 ## Instalación de dependencias y configuración del entorno
 ### Instalación WSL
-a. Abrir la terminal de comandos:
+#### a. Abrir la terminal de comandos:
 Presiona las teclas Windows + X en tu teclado y selecciona PowerShell o Terminal (también puedes buscar "PowerShell" en el menú de inicio de Windows).
-b. Verificar e iniciar el subsistema:
+#### b. Verificar e iniciar el subsistema:
 Ejecuta el siguiente comando para ver las distribuciones de WSL instaladas y su estado:
+```bash
 wsl -l -v
 (Nota: Si es la primera vez que configuras WSL o te pide instalar un entorno, presiona cualquier tecla o sigue las instrucciones en pantalla para completar la descarga e instalación del sistema Linux).
 c. Actualizar el subsistema:
@@ -49,10 +50,10 @@ Ingresa al sitio web oficial de la documentación de Docker para Windows en el s
 https://docs.docker.com/desktop/setup/install/windows-install/
 Descarga e instala Docker Desktop siguiendo los pasos que indica el asistente en pantalla.
 ### Configuración de la integración con WSL en Docker Desktop:
-*Abre Docker Desktop en tu computadora.
-*Dirígete a la sección de configuración haciendo clic en el icono de engranaje (Settings).
-*Navega a la ruta: Resources -> WSL Integration.
-*Busca tu distribución de Ubuntu en la lista y actívala (habilítala) para permitir que Docker funcione directamente dentro de tu entorno de Linux.
+* Abre Docker Desktop en tu computadora.
+* Dirígete a la sección de configuración haciendo clic en el icono de engranaje (Settings).
+* Navega a la ruta: Resources -> WSL Integration.
+* Busca tu distribución de Ubuntu en la lista y actívala (habilítala) para permitir que Docker funcione directamente dentro de tu entorno de Linux.
 ![alt text](image-4.png)
 ### Validar Docker desde Ubuntu:
 Abre tu terminal de Ubuntu.
@@ -79,14 +80,14 @@ cd Proyecto-Inventario
 ## Instalacion php
 Ya que esta el proyecto en local es necesario descargar php para el uso de composer, el cual será necesario para gestionar las dependencias necesarias y así poder levantar el aplicativo en Docker
 Se recomienda actualizar la lista de paquetes de Ubuntu para evitar problemas de versiones o falta de librerías. Para ello se puede usar los siguientes comandos:
-*sudo apt upgrade 
-*sudo apt update
+* sudo apt upgrade 
+* sudo apt update
 Ya que se ejecutan los anteriores comandos se puede usar el siguiente para descargar php:
-*sudo apt install php-cli php-mbstring php-xml php-zip php-curl
+* sudo apt install php-cli php-mbstring php-xml php-zip php-curl
 Después de ejecutar se puede verificar la instalación con php -v para esta aplicación en específico se requiere de php 8.5 o superior
 ![alt text](image-11.png)
 Ya que se tiene php se prosigue con el gestor de dependencias composer:
-*sudo apt install composer
+* sudo apt install composer
 ![alt text](image-12.png)
 Durante la instalación va a preguntar si se desea continuar, solo se presión (y) y se continua. Con eso ya se tiene php y su gestor de dependencias, para continuar se debe configurar el archivo .env, el cual ayudara a desplegar sail para levantar los contenedores con docker
 ## Configuración del Archivo .env
@@ -195,6 +196,7 @@ Aquí se deben añadir las siguientes variables:
 | `DATABASE_URL` | Copiar y pegar la *public database url* |
 | `DB_URL` | Copiar y pegar la *internal database url` |
 | `JWT_SECRET` | Ejecutar `php artisan jwt:secret --show` |
+
 La internal url y external url se consiguen en el servicio de postgres, dirigiéndose al dashboard
 ![alt text](image-38.png)
 Se selecciona el servicio de postgres
